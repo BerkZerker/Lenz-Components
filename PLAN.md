@@ -1,0 +1,3 @@
+# Plan
+
+Build this repo out to contain all of the components in individual files. They should all pull shared info so nothing is repeated or hard coded. This will make it easier to maintain and update in the future. The goal is to build all of the components and then a main screen to see all of the indiviual components together. This will be a good way to test and make sure everything is working correctly before we start building out the actual app. For now, it should all just be web based and we can worry about mobile later. The main focus should be on building the components and an environment to easily itterate and improve them.
