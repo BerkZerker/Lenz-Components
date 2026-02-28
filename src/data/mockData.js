@@ -68,12 +68,16 @@ export const CORRELATION_DATA = [
     headline: "Gym completion ↓ 40% after meetings past 6pm",
     detail:
       "On days with calendar events after 6pm, your gym habit drops from 78% to 38% completion.",
-    sourceIcon: "calendar",
-    targetIcon: "gym",
     confidence: 0.82,
-    sparkline: [78, 72, 65, 55, 42, 38, 35, 40, 38],
-    sourceColor: "#6b9fd4",
-    targetColor: "#d47b6b",
+    events: [
+      { date: "2026-02-03", label: "Meeting 6:30pm → Skipped gym" },
+      { date: "2026-02-07", label: "Meeting 7pm → Skipped gym" },
+      { date: "2026-02-10", label: "Meeting 6:15pm → Skipped gym" },
+      { date: "2026-02-14", label: "Meeting 6:45pm → Skipped gym" },
+      { date: "2026-02-18", label: "Meeting 8pm → Skipped gym" },
+      { date: "2026-02-21", label: "Meeting 6pm → Skipped gym" },
+      { date: "2026-02-27", label: "Meeting 7:30pm → Skipped gym" },
+    ],
   },
   {
     id: "2",
@@ -81,12 +85,17 @@ export const CORRELATION_DATA = [
     headline: "Meditation + Journal stack → 92% completion",
     detail:
       "When you meditate first, journal completion jumps from 58% to 92%. Consider pairing them.",
-    sourceIcon: "meditation",
-    targetIcon: "journal",
     confidence: 0.91,
-    sparkline: [55, 62, 70, 78, 85, 88, 90, 91, 92],
-    sourceColor: "#7a9e7e",
-    targetColor: "#9585c1",
+    events: [
+      { date: "2026-01-28", label: "Meditated 7am → Journaled 9pm" },
+      { date: "2026-02-01", label: "Meditated 7:15am → Journaled 8:45pm" },
+      { date: "2026-02-04", label: "Meditated 6:50am → Journaled 9:10pm" },
+      { date: "2026-02-05", label: "Meditated 7am → Journaled 9pm" },
+      { date: "2026-02-09", label: "Meditated 7:30am → Journaled 8:30pm" },
+      { date: "2026-02-15", label: "Meditated 6:45am → Journaled 9:15pm" },
+      { date: "2026-02-19", label: "Meditated 7am → Journaled 9pm" },
+      { date: "2026-02-24", label: "Meditated 7:10am → Journaled 8:50pm" },
+    ],
   },
   {
     id: "3",
@@ -94,12 +103,15 @@ export const CORRELATION_DATA = [
     headline: "Sleep under 6hrs → reading streak breaks",
     detail:
       "Your reading habit has a 73% failure rate on days following less than 6 hours of sleep.",
-    sourceIcon: "sleep",
-    targetIcon: "book",
     confidence: 0.68,
-    sparkline: [80, 75, 60, 45, 30, 28, 25, 30, 27],
-    sourceColor: "#7a8a9e",
-    targetColor: "#6b9fd4",
+    events: [
+      { date: "2026-02-02", label: "Slept 5.5hrs → Missed reading" },
+      { date: "2026-02-08", label: "Slept 4hrs → Missed reading" },
+      { date: "2026-02-13", label: "Slept 5hrs → Missed reading" },
+      { date: "2026-02-20", label: "Slept 5.5hrs → Missed reading" },
+      { date: "2026-02-25", label: "Slept 4.5hrs → Missed reading" },
+      { date: "2026-02-27", label: "Slept 5hrs → Missed reading" },
+    ],
   },
   {
     id: "4",
@@ -107,12 +119,16 @@ export const CORRELATION_DATA = [
     headline: "Weather has no effect on your reading habit",
     detail:
       "Rain or shine, your reading completion stays around 72%. This habit is well-anchored.",
-    sourceIcon: "weather",
-    targetIcon: "book",
     confidence: 0.88,
-    sparkline: [70, 73, 71, 74, 72, 70, 73, 72, 71],
-    sourceColor: "#6b9fd4",
-    targetColor: "#6b9fd4",
+    events: [
+      { date: "2026-01-30", label: "Rainy → Read 35 min" },
+      { date: "2026-02-03", label: "Sunny → Read 30 min" },
+      { date: "2026-02-06", label: "Overcast → Read 28 min" },
+      { date: "2026-02-11", label: "Rainy → Read 32 min" },
+      { date: "2026-02-16", label: "Sunny → Read 30 min" },
+      { date: "2026-02-22", label: "Snow → Read 40 min" },
+      { date: "2026-02-26", label: "Cloudy → Read 31 min" },
+    ],
   },
 ];
 

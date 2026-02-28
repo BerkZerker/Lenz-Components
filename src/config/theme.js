@@ -52,9 +52,3 @@ export const HABIT_COLORS = [
 
 export const getHabitColor = (id) =>
   HABIT_COLORS.find((c) => c.id === id) ?? HABIT_COLORS[0];
-
-export const TREND_COLORS = {
-  positive: "#4a8d5f",
-  negative: "#d47b6b",
-  neutral: "#6b9fd4",
-};

@@ -56,7 +56,7 @@ export default function CompletionTrendChart({ theme, data, uid }) {
       <div style={{ width:280, height:160 }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData} margin={{ top:8, right:8, bottom:0, left:-10 }}>
-            <CartesianGrid horizontal vertical={false} stroke={theme.borderSubtle} strokeOpacity={0.5} />
+            <CartesianGrid horizontal vertical={false} stroke={theme.textMuted} strokeOpacity={0.25} strokeDasharray="4 3" />
             <XAxis
               dataKey="label"
               tick={{ fontSize:9, fill:theme.textMuted, fontFamily:'Inter,sans-serif' }}
@@ -77,12 +77,13 @@ export default function CompletionTrendChart({ theme, data, uid }) {
               cursor={{ stroke: theme.borderSubtle, strokeDasharray: '3 2' }}
             />
             <Line
-              type="linear"
+              type="monotone"
               dataKey="value"
               stroke={theme.accent}
-              strokeWidth={2}
+              strokeWidth={1.25}
               dot={false}
-              activeDot={{ r:4, fill:theme.surface1, stroke:theme.accent, strokeWidth:2 }}
+              activeDot={{ r:3, fill:theme.surface1, stroke:theme.accent, strokeWidth:1.25 }}
+              animationDuration={500}
             />
           </LineChart>
         </ResponsiveContainer>
