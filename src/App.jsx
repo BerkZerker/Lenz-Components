@@ -106,7 +106,7 @@ export default function App() {
           <NoiseBackground mode={mode} />
         </div>
 
-        <div style={{ maxWidth: 420, margin: '0 auto', padding: '24px 20px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: 420, margin: '0 auto', padding: '24px 20px 90px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
             {/* ─── Habits Section ─── */}
@@ -181,9 +181,8 @@ export default function App() {
             {show('navigation') && (
               <>
                 <SectionLabel theme={theme}>Bottom Tab Bar</SectionLabel>
-                <GlassCard theme={theme} style={{ overflow: 'hidden', borderRadius: 14 }}>
-                  <BottomTabBar theme={theme} activeTab={activeTab} onTabChange={setActiveTab} />
-                </GlassCard>
+                <BottomTabBar theme={theme} mode={mode} activeTab={activeTab}
+                  onTabChange={setActiveTab} onAddHabit={() => {}} onVoiceNote={() => {}} inline />
               </>
             )}
 
@@ -207,6 +206,10 @@ export default function App() {
 
       {/* Habit Detail Modal */}
       <HabitDetailModal theme={theme} habit={detailHabit} onClose={() => setDetailHabit(null)} />
+
+      {/* Fixed Bottom Tab Bar */}
+      <BottomTabBar theme={theme} mode={mode} activeTab={activeTab}
+        onTabChange={setActiveTab} onAddHabit={() => {}} onVoiceNote={() => {}} />
     </div>
   );
 }

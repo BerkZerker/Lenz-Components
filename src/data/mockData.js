@@ -98,22 +98,6 @@ export const CORRELATION_DATA = [
     ],
   },
   {
-    id: "3",
-    type: "negative",
-    headline: "Sleep under 6hrs → reading streak breaks",
-    detail:
-      "Your reading habit has a 73% failure rate on days following less than 6 hours of sleep.",
-    confidence: 0.68,
-    events: [
-      { date: "2026-02-02", label: "Slept 5.5hrs → Missed reading" },
-      { date: "2026-02-08", label: "Slept 4hrs → Missed reading" },
-      { date: "2026-02-13", label: "Slept 5hrs → Missed reading" },
-      { date: "2026-02-20", label: "Slept 5.5hrs → Missed reading" },
-      { date: "2026-02-25", label: "Slept 4.5hrs → Missed reading" },
-      { date: "2026-02-27", label: "Slept 5hrs → Missed reading" },
-    ],
-  },
-  {
     id: "4",
     type: "neutral",
     headline: "Weather has no effect on your reading habit",

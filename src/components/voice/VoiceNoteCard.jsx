@@ -44,6 +44,9 @@ export default function VoiceNoteCard({ theme, habitName, duration = '0:42', tim
   const waveform = useMemo(() => generateWaveform(28, seed), [seed]);
   const intervalRef = useRef(null);
   const animRef = useRef(null);
+  const canvasRef = useRef(null);
+  const blobsRef = useRef(null);
+  const blobAnimRef = useRef(null);
 
   const togglePlay = () => {
     if (playing) {
@@ -74,9 +77,68 @@ export default function VoiceNoteCard({ theme, habitName, duration = '0:42', tim
   useEffect(() => () => {
     clearInterval(intervalRef.current);
     cancelAnimationFrame(animRef.current);
+    cancelAnimationFrame(blobAnimRef.current);
   }, []);
 
   const accentColor = color || theme.accent;
+
+  const hexToRgb = (hex) => {
+    const n = parseInt(hex.replace('#', ''), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  };
+
+  useEffect(() => {
+    if (!playing) {
+      if (blobAnimRef.current) cancelAnimationFrame(blobAnimRef.current);
+      return;
+    }
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const w = rect.width;
+    const h = rect.height;
+
+    const rand = () => Math.random();
+    blobsRef.current = [
+      { cx: 0.5, cy: 0.0, freqX: 0.25 + rand() * 0.2, freqY: 0.08 + rand() * 0.1, phaseX: rand() * Math.PI * 2, phaseY: rand() * Math.PI * 2, radiusPct: 0.75 + rand() * 0.15, alpha: 0.08 + rand() * 0.03 },
+      { cx: 0.5, cy: 0.0, freqX: 0.25 + rand() * 0.2, freqY: 0.08 + rand() * 0.1, phaseX: rand() * Math.PI * 2, phaseY: rand() * Math.PI * 2, radiusPct: 0.70 + rand() * 0.15, alpha: 0.07 + rand() * 0.03 },
+      { cx: 0.5, cy: 0.0, freqX: 0.25 + rand() * 0.2, freqY: 0.08 + rand() * 0.1, phaseX: rand() * Math.PI * 2, phaseY: rand() * Math.PI * 2, radiusPct: 0.55 + rand() * 0.15, alpha: 0.08 + rand() * 0.04 },
+    ];
+
+    const startTime = performance.now();
+    const draw = (now) => {
+      const t = (now - startTime) / 1000;
+      ctx.clearRect(0, 0, w, h);
+      ctx.globalCompositeOperation = 'lighter';
+
+      const [r, g, b] = hexToRgb(accentColor);
+
+      for (const blob of blobsRef.current) {
+        const x = (blob.cx + 0.45 * Math.sin(blob.freqX * t + blob.phaseX)) * w;
+        const y = (blob.cy + 0.06 * Math.sin(blob.freqY * t + blob.phaseY)) * h;
+        const radius = blob.radiusPct * w;
+
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        grad.addColorStop(0, `rgba(${r},${g},${b},${blob.alpha})`);
+        grad.addColorStop(0.4, `rgba(${r},${g},${b},${blob.alpha * 0.35})`);
+        grad.addColorStop(0.75, `rgba(${r},${g},${b},0)`);
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      blobAnimRef.current = requestAnimationFrame(draw);
+    };
+    blobAnimRef.current = requestAnimationFrame(draw);
+
+    return () => cancelAnimationFrame(blobAnimRef.current);
+  }, [playing, accentColor]);
+
   const barCount = waveform.length;
   const BAR_W = 3;
   const BAR_GAP = 2;
@@ -88,7 +150,18 @@ export default function VoiceNoteCard({ theme, habitName, duration = '0:42', tim
   const transcript = transcription || "Had a really good morning session today. Felt focused after about 5 minutes and...";
 
   return (
-    <GlassCard theme={theme} style={{ padding:16 }}>
+    <GlassCard theme={theme} style={{ padding:16, position:'relative', overflow:'hidden' }}>
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: 'absolute', inset: 0, borderRadius: 14,
+          width: '100%', height: '100%',
+          opacity: playing ? 1 : 0,
+          transition: 'opacity 0.8s ease-in-out',
+          pointerEvents: 'none',
+        }}
+      />
+      <div style={{ position: 'relative' }}>
       <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:12 }}>
         <div style={{
           width:28, height:28, borderRadius:8, flexShrink:0,
@@ -169,6 +242,7 @@ export default function VoiceNoteCard({ theme, habitName, duration = '0:42', tim
         color:theme.textMuted, lineHeight:1.5, fontStyle:'italic',
       }}>
         "{transcript}"
+      </div>
       </div>
     </GlassCard>
   );
