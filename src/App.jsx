@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { THEMES } from './config/theme';
+import { THEMES, MAX_WIDTH, FONT_FAMILY, radius } from './config/theme';
 import { INITIAL_HABITS, BAR_DATA, CORRELATION_DATA, makeMultiHabitTrend } from './data/mockData';
 
 import NoiseBackground from './components/foundation/NoiseBackground';
@@ -59,14 +59,14 @@ export default function App() {
   const show = (section) => activeSection === 'all' || activeSection === section;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', fontFamily: 'Inter, system-ui, sans-serif', overflow: 'hidden', background: theme.bg }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', fontFamily: FONT_FAMILY, overflow: 'hidden', background: theme.bg }}>
       {/* Sticky Toolbar */}
       <div style={{
         position: 'sticky', top: 0, zIndex: 50,
         background: theme.surface1, borderBottom: `1px solid ${theme.glassBorder}`,
         padding: '12px 20px 10px',
       }}>
-        <div style={{ maxWidth: 420, margin: '0 auto' }}>
+        <div style={{ maxWidth: MAX_WIDTH, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
             <div style={{ fontSize: 16, fontWeight: 500, color: theme.textPrimary, letterSpacing: '-0.3px' }}>
               Lenz Artboard
@@ -85,11 +85,11 @@ export default function App() {
                 key={s.id}
                 onClick={() => setActiveSection(s.id)}
                 style={{
-                  borderRadius: 9999, border: 'none', cursor: 'pointer',
+                  borderRadius: radius.pill, border: 'none', cursor: 'pointer',
                   padding: '5px 12px', whiteSpace: 'nowrap', flexShrink: 0,
                   background: activeSection === s.id ? theme.accentMuted : 'transparent',
                   color: activeSection === s.id ? theme.accent : theme.textMuted,
-                  fontSize: 11, fontWeight: 500, fontFamily: 'Inter, system-ui, sans-serif',
+                  fontSize: 11, fontWeight: 500, fontFamily: FONT_FAMILY,
                   transition: 'background 0.15s, color 0.15s',
                 }}
               >
@@ -103,10 +103,10 @@ export default function App() {
       {/* Canvas */}
       <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden', position: 'relative' }}>
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
-          <NoiseBackground mode={mode} />
+          <NoiseBackground theme={theme} />
         </div>
 
-        <div style={{ maxWidth: 420, margin: '0 auto', padding: '24px 20px 90px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: MAX_WIDTH, margin: '0 auto', padding: '24px 20px 90px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
             {/* ─── Habits Section ─── */}
@@ -140,7 +140,7 @@ export default function App() {
                 <HabitBarChart theme={theme} data={BAR_DATA} />
 
                 <SectionLabel theme={theme}>Trend</SectionLabel>
-                <CompletionTrendChart theme={theme} data={TREND_DATA} habits={INITIAL_HABITS} uid={mode} />
+                <CompletionTrendChart theme={theme} data={TREND_DATA} habits={INITIAL_HABITS} />
 
                 <SectionLabel theme={theme}>Leaderboard</SectionLabel>
                 <StreakLeaderboard theme={theme} habits={habits} />
@@ -181,7 +181,7 @@ export default function App() {
             {show('navigation') && (
               <>
                 <SectionLabel theme={theme}>Bottom Tab Bar</SectionLabel>
-                <BottomTabBar theme={theme} mode={mode} activeTab={activeTab}
+                <BottomTabBar theme={theme} activeTab={activeTab}
                   onTabChange={setActiveTab} onAddHabit={() => {}} onVoiceNote={() => {}} inline />
               </>
             )}
@@ -208,7 +208,7 @@ export default function App() {
       <HabitDetailModal theme={theme} habit={detailHabit} onClose={() => setDetailHabit(null)} />
 
       {/* Fixed Bottom Tab Bar */}
-      <BottomTabBar theme={theme} mode={mode} activeTab={activeTab}
+      <BottomTabBar theme={theme} activeTab={activeTab}
         onTabChange={setActiveTab} onAddHabit={() => {}} onVoiceNote={() => {}} />
     </div>
   );

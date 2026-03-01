@@ -8,7 +8,7 @@ export default function Toggle({ theme, checked, onChange, size = 'md' }) {
   return (
     <Switch.Root
       checked={checked}
-      onCheckedChange={() => onChange()}
+      onCheckedChange={(checked) => onChange(checked)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{

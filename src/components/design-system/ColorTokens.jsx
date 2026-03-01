@@ -8,6 +8,10 @@ export default function ColorTokens({ theme }) {
     ['accent', theme.accent], ['accentFaint', theme.accentFaint],
     ['accentMuted', theme.accentMuted], ['danger', theme.danger],
     ['glassBackground', theme.glassBackground], ['glassBorder', theme.glassBorder],
+    ['accentHover', theme.accentHover], ['accentGlass', theme.accentGlass],
+    ['surface3', theme.surface3], ['scrim', theme.scrim],
+    ['hoverOverlay', theme.hoverOverlay], ['pressOverlay', theme.pressOverlay],
+    ['info', theme.info], ['warning', theme.warning],
   ];
   return (
     <GlassCard theme={theme} style={{ padding:20 }}>

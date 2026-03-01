@@ -2,6 +2,7 @@ import { useState } from "react";
 import * as Slider from "@radix-ui/react-slider";
 import GlassCard from "../foundation/GlassCard";
 import AIBannerPill from "./AIBannerPill";
+import { withAlpha } from "../../config/theme";
 
 export default function SensitivitySlider({ theme }) {
   const [value, setValue] = useState(50);
@@ -62,7 +63,7 @@ export default function SensitivitySlider({ theme }) {
             flexGrow: 1,
             height: 3,
             borderRadius: 9999,
-            background: `linear-gradient(to right, ${theme.accent}30, ${theme.accent})`,
+            background: `linear-gradient(to right, ${withAlpha(theme.accent, 0.19)}, ${theme.accent})`,
           }}
         >
           <Slider.Range
@@ -154,6 +155,7 @@ export default function SensitivitySlider({ theme }) {
             strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"
+            aria-hidden="true"
           >
             {isLow && (
               <>

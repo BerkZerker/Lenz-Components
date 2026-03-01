@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { noiseDots, TILE } from '../../config/noise';
+import SparkleIcon from '../foundation/SparkleIcon';
+import { FONT_FAMILY, MAX_WIDTH } from '../../config/theme';
 
 const TABS = [
   { id: 'today', label: 'Today', icon: (c) => (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <rect x={3} y={4} width={18} height={18} rx={2} />
       <line x1={16} y1={2} x2={16} y2={6} /><line x1={8} y1={2} x2={8} y2={6} />
       <line x1={3} y1={10} x2={21} y2={10} />
@@ -11,33 +12,30 @@ const TABS = [
     </svg>
   )},
   { id: 'stats', label: 'Stats', icon: (c) => (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <rect x={4} y={14} width={4} height={7} rx={1} />
       <rect x={10} y={8} width={4} height={13} rx={1} />
       <rect x={16} y={3} width={4} height={18} rx={1} />
     </svg>
   )},
   { id: 'insights', label: 'Insights', icon: (c) => (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M10 2l1.5 4.5L16 8l-4.5 1.5L10 14l-1.5-4.5L4 8l4.5-1.5z" />
-      <path d="M18 12l1 3 3 1-3 1-1 3-1-3-3-1 3-1z" />
-    </svg>
+    <SparkleIcon size={22} color={c} strokeWidth={1.8} />
   )},
   { id: 'more', label: 'More', icon: (c) => (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <line x1={4} y1={6} x2={20} y2={6} /><line x1={4} y1={12} x2={20} y2={12} /><line x1={4} y1={18} x2={20} y2={18} />
     </svg>
   )},
 ];
 
 const PlusIcon = () => (
-  <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5} strokeLinecap="round">
+  <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5} strokeLinecap="round" aria-hidden="true">
     <line x1={12} y1={5} x2={12} y2={19} /><line x1={5} y1={12} x2={19} y2={12} />
   </svg>
 );
 
 const MicIcon = () => (
-  <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+  <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <rect x={9} y={2} width={6} height={12} rx={3} />
     <path d="M5 10a7 7 0 0 0 14 0" />
     <line x1={12} y1={17} x2={12} y2={21} />
@@ -45,7 +43,7 @@ const MicIcon = () => (
   </svg>
 );
 
-export default function BottomTabBar({ theme, mode, activeTab, onTabChange, onAddHabit, onVoiceNote, inline }) {
+export default function BottomTabBar({ theme, activeTab, onTabChange, onAddHabit, onVoiceNote, inline }) {
   const [fabHovered, setFabHovered] = useState(false);
   const [fabPressed, setFabPressed] = useState(false);
 
@@ -71,8 +69,7 @@ export default function BottomTabBar({ theme, mode, activeTab, onTabChange, onAd
   const fabAction = isMic ? onVoiceNote : onAddHabit;
   const fabScale = fabPressed ? 'scale(0.9)' : fabHovered ? 'scale(1.06)' : 'scale(1)';
 
-  const noiseOpKey = mode === 'dark' ? 'opDark' : 'opLight';
-  const insetShadowColor = mode === 'dark'
+  const insetShadowColor = theme.mode === 'dark'
     ? 'inset 0 1px 0 rgba(255,255,255,0.06)'
     : 'inset 0 1px 0 rgba(255,255,255,0.5)';
 
@@ -80,7 +77,13 @@ export default function BottomTabBar({ theme, mode, activeTab, onTabChange, onAd
     const active = activeTab === tab.id;
     const color = active ? theme.accent : theme.textMuted;
     return (
-      <button key={tab.id} onClick={() => onTabChange(tab.id)} style={{
+      <button
+        key={tab.id}
+        onClick={() => onTabChange(tab.id)}
+        role="tab"
+        aria-selected={active}
+        aria-current={active ? 'page' : undefined}
+        style={{
         flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
         background: 'none', border: 'none', cursor: 'pointer', padding: '6px 0',
         position: 'relative',
@@ -96,7 +99,7 @@ export default function BottomTabBar({ theme, mode, activeTab, onTabChange, onAd
         </div>
         <span style={{
           fontSize: 10, fontWeight: active ? 600 : 400, color,
-          fontFamily: 'Inter, system-ui, sans-serif',
+          fontFamily: FONT_FAMILY,
           transition: 'color 0.2s, font-weight 0.2s',
         }}>
           {tab.label}
@@ -113,10 +116,10 @@ export default function BottomTabBar({ theme, mode, activeTab, onTabChange, onAd
   };
 
   return (
-    <div style={{
+    <nav aria-label="Main navigation" style={{
       ...(inline ? {} : {
         position: 'fixed', bottom: 12, left: '50%', transform: 'translateX(-50%)',
-        width: 'calc(100% - 24px)', maxWidth: 420, zIndex: 100,
+        width: 'calc(100% - 24px)', maxWidth: MAX_WIDTH, zIndex: 100,
       }),
     }}>
       <div style={{
@@ -131,23 +134,8 @@ export default function BottomTabBar({ theme, mode, activeTab, onTabChange, onAd
         padding: '4px 0',
         overflow: 'hidden',
       }}>
-        {/* Noise overlay */}
-        <svg style={{
-          position: 'absolute', inset: 0, width: '100%', height: '100%',
-          pointerEvents: 'none', opacity: 0.5,
-        }}>
-          <defs>
-            <pattern id="tabbar-noise" x={0} y={0} width={TILE} height={TILE} patternUnits="userSpaceOnUse">
-              {noiseDots.map((d, i) => (
-                <circle key={i} cx={d.cx} cy={d.cy} r={d.r} fill={mode === 'dark' ? '#fff' : '#000'} opacity={d[noiseOpKey]} />
-              ))}
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#tabbar-noise)" />
-        </svg>
-
         {/* Left tabs */}
-        <div style={{ flex: 1, display: 'flex', position: 'relative', zIndex: 1 }}>
+        <div role="tablist" style={{ flex: 1, display: 'flex', position: 'relative', zIndex: 1 }}>
           {leftTabs.map(renderTab)}
         </div>
 
@@ -162,6 +150,7 @@ export default function BottomTabBar({ theme, mode, activeTab, onTabChange, onAd
             onMouseLeave={() => { setFabHovered(false); setFabPressed(false); }}
             onMouseDown={() => setFabPressed(true)}
             onMouseUp={() => setFabPressed(false)}
+            aria-label={isMic ? 'Record voice note' : 'Add new habit'}
             style={{
               width: 54, height: 54, borderRadius: 9999,
               background: theme.accent,
@@ -178,10 +167,10 @@ export default function BottomTabBar({ theme, mode, activeTab, onTabChange, onAd
         </div>
 
         {/* Right tabs */}
-        <div style={{ flex: 1, display: 'flex', position: 'relative', zIndex: 1 }}>
+        <div role="tablist" style={{ flex: 1, display: 'flex', position: 'relative', zIndex: 1 }}>
           {rightTabs.map(renderTab)}
         </div>
       </div>
-    </div>
+    </nav>
   );
 }

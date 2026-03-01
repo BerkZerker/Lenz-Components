@@ -1,15 +1,22 @@
-import { useState } from 'react';
-import { getHabitColor } from '../../config/theme';
+import { useState, useEffect } from 'react';
+import { getHabitColor, withAlpha } from '../../config/theme';
 import GlassCard from '../foundation/GlassCard';
 
 export default function WeeklyGrid({ theme, habits }) {
-  const DAYS = ['M','T','W','T','F','S','S'];
+  const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   const [grid, setGrid] = useState(() =>
     habits.map(h => ({
       ...h,
       weekly: h.weekly || Array.from({ length: 7 }, () => Math.random() > 0.4 ? 1 : 0),
     }))
   );
+
+  useEffect(() => {
+    setGrid(habits.map(h => ({
+      ...h,
+      weekly: h.weekly || Array.from({ length: 7 }, () => Math.random() > 0.4 ? 1 : 0),
+    })));
+  }, [habits]);
 
   const toggleCell = (habitIdx, dayIdx) => {
     setGrid(prev => prev.map((h, i) => {
@@ -42,9 +49,10 @@ export default function WeeklyGrid({ theme, habits }) {
                 <div key={di} style={{ flex:1, display:'flex', justifyContent:'center' }}>
                   <button
                     onClick={() => toggleCell(hi, di)}
+                    aria-label={`${DAYS[di]}, ${habit.name}, ${val ? 'completed' : 'not completed'}`}
                     style={{
                       width:28, height:28, borderRadius:8, border:'none', cursor:'pointer',
-                      background: val ? color + '30' : theme.borderSubtle,
+                      background: val ? withAlpha(color, 0.19) : theme.borderSubtle,
                       display:'flex', alignItems:'center', justifyContent:'center',
                       transition:'background 0.15s, transform 0.1s',
                     }}
@@ -53,7 +61,7 @@ export default function WeeklyGrid({ theme, habits }) {
                     onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                   >
                     {val ? (
-                      <svg width={14} height={14} viewBox="0 0 20 20" fill="none">
+                      <svg width={14} height={14} viewBox="0 0 20 20" fill="none" aria-hidden="true">
                         <path d="M5 10.5L8.5 14L15 6.5" stroke={color} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     ) : null}

@@ -7,13 +7,18 @@ export default function HabitCard({ theme, habit, onToggle, isLast, onClick }) {
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
   return (
-    <div style={{
-      display:'flex', alignItems:'center', padding:'13px 4px', gap:10,
-      borderBottom: !isLast ? `1px solid ${theme.borderSubtle}` : undefined,
-      background: pressed ? 'rgba(128,128,128,0.14)' : hovered ? 'rgba(128,128,128,0.08)' : 'transparent',
-      transition:'background 0.1s',
-      borderRadius:10, cursor:'pointer',
-    }}
+    <div
+      role="button"
+      tabIndex={0}
+      aria-label={`${habit.name}, ${habit.completed ? 'completed' : 'not completed'}`}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick && onClick(habit); } }}
+      style={{
+        display:'flex', alignItems:'center', padding:'13px 4px', gap:10,
+        borderBottom: !isLast ? `1px solid ${theme.borderSubtle}` : undefined,
+        background: pressed ? theme.pressOverlay : hovered ? theme.hoverOverlay : 'transparent',
+        transition:'background 0.1s',
+        borderRadius:10, cursor:'pointer',
+      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => { setHovered(false); setPressed(false); }}
       onMouseDown={() => setPressed(true)}
@@ -33,7 +38,8 @@ export default function HabitCard({ theme, habit, onToggle, isLast, onClick }) {
           <div style={{ fontSize:11, fontWeight:300, color:theme.textMuted }}>{habit.category}</div>
         </div>
         <svg width={17} height={17} viewBox="0 0 24 24" fill="none"
-          stroke={theme.textMuted} strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round">
+          stroke={theme.textMuted} strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round"
+          aria-hidden="true">
           <polyline points="9 18 15 12 9 6" />
         </svg>
       </div>

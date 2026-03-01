@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Drawer } from 'vaul';
 import GlassCard from '../foundation/GlassCard';
+import { withAlpha, MAX_WIDTH } from '../../config/theme';
 
 export default function CorrelationCard({ theme, correlation }) {
   const { type, headline, detail, confidence, events } = correlation;
@@ -15,25 +16,11 @@ export default function CorrelationCard({ theme, correlation }) {
     return () => ro.disconnect();
   }, []);
 
-  useEffect(() => {
-    const id = 'vaul-drawer-styles';
-    if (document.getElementById(id)) return;
-    const style = document.createElement('style');
-    style.id = id;
-    style.textContent = `
-      [vaul-drawer] { touch-action: none; }
-      [vaul-drawer][vaul-drawer-direction="bottom"] {
-        transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
-      }
-    `;
-    document.head.appendChild(style);
-  }, []);
-
   const typeConfig = {
     positive: { label: 'Positive correlation', color: theme.accent,  glass: theme.accentGlass },
-    negative: { label: 'Negative correlation', color: theme.danger,  glass: theme.danger + '18' },
-    neutral:  { label: 'No correlation',       color: '#6b9fd4',     glass: 'rgba(107,159,212,0.12)' },
-    caution:  { label: 'Caution — emerging',   color: '#c99a4a',     glass: 'rgba(201,154,74,0.12)' },
+    negative: { label: 'Negative correlation', color: theme.danger,  glass: withAlpha(theme.danger, 0.09) },
+    neutral:  { label: 'No correlation',       color: theme.info,    glass: withAlpha(theme.info, 0.12) },
+    caution:  { label: 'Caution — emerging',   color: theme.warning, glass: withAlpha(theme.warning, 0.12) },
   };
   const cfg = typeConfig[type] || typeConfig.neutral;
   const typeColor = cfg.color;
@@ -66,7 +53,13 @@ export default function CorrelationCard({ theme, correlation }) {
 
   return (
     <>
-      <div onClick={hasEvents ? () => setOpen(true) : undefined} style={{ cursor: hasEvents ? 'pointer' : 'default' }}>
+      <div
+        onClick={hasEvents ? () => setOpen(true) : undefined}
+        role={hasEvents ? 'button' : undefined}
+        tabIndex={hasEvents ? 0 : undefined}
+        onKeyDown={hasEvents ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(true); } } : undefined}
+        style={{ cursor: hasEvents ? 'pointer' : 'default' }}
+      >
         <GlassCard theme={theme} style={{ padding: 16 }}>
           <div style={{ fontSize: 14, fontWeight: 500, color: theme.textPrimary, lineHeight: 1.35, marginBottom: 4 }}>
             {headline}
@@ -106,7 +99,7 @@ export default function CorrelationCard({ theme, correlation }) {
 
                 <div ref={trackRef} style={{ width: '100%', height: svgH }}>
                   {trackWidth > 0 && (
-                    <svg width={trackWidth} height={svgH} style={{ display: 'block' }}>
+                    <svg width={trackWidth} height={svgH} style={{ display: 'block' }} aria-hidden="true">
                       {positions.map((pos, i) => {
                         if (i === 0) return null;
                         const x1 = padX + positions[i - 1] * (trackWidth - padX * 2);
@@ -115,7 +108,7 @@ export default function CorrelationCard({ theme, correlation }) {
                           <line
                             key={`l${i}`}
                             x1={x1} y1={cy} x2={x2} y2={cy}
-                            stroke={typeColor + '40'} strokeWidth={1.5} strokeLinecap="round"
+                            stroke={withAlpha(typeColor, 0.25)} strokeWidth={1.5} strokeLinecap="round"
                           />
                         );
                       })}
@@ -143,11 +136,11 @@ export default function CorrelationCard({ theme, correlation }) {
           <Drawer.Portal>
             <Drawer.Overlay style={{
               position: 'fixed', inset: 0, zIndex: 100,
-              background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
+              background: theme.scrim, backdropFilter: 'blur(4px)',
             }} />
             <Drawer.Content style={{
               position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)',
-              zIndex: 101, width: '100%', maxWidth: 420, maxHeight: '85vh',
+              zIndex: 101, width: '100%', maxWidth: MAX_WIDTH, maxHeight: '85vh',
               background: theme.surface1, borderRadius: '20px 20px 0 0',
               overflowY: 'auto', outline: 'none',
             }}>
@@ -173,7 +166,7 @@ export default function CorrelationCard({ theme, correlation }) {
                         {i < sorted.length - 1 && (
                           <div style={{
                             width: 1.5, flex: 1, minHeight: 16,
-                            background: typeColor + '40',
+                            background: withAlpha(typeColor, 0.25),
                           }} />
                         )}
                       </div>

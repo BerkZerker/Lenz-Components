@@ -1,12 +1,12 @@
 import { noiseDots, TILE } from '../../config/noise';
 
-export default function NoiseBackground({ mode }) {
-  const isDark = mode === 'dark';
+export default function NoiseBackground({ theme }) {
+  const isDark = theme.mode === 'dark';
   const base = isDark ? '255,255,255' : '0,0,0';
-  const pid = `noise-${mode}`;
+  const pid = `noise-${theme.mode}`;
   return (
     <div style={{ position:'absolute', inset:0, pointerEvents:'none', overflow:'hidden' }}>
-      <svg width="100%" height="100%" style={{ position:'absolute', inset:0 }}>
+      <svg width="100%" height="100%" style={{ position:'absolute', inset:0 }} aria-hidden="true">
         <defs>
           <pattern id={pid} x="0" y="0" width={TILE} height={TILE} patternUnits="userSpaceOnUse">
             {noiseDots.map((d,i) => (

@@ -1,7 +1,7 @@
 export default function Checkmark({ checked, color, size = 21 }) {
   const PL = 16;
   return (
-    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" style={{ display:'block' }}>
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" style={{ display:'block' }} aria-hidden="true">
       <circle cx={10} cy={10} r={9} stroke={color} strokeWidth={1.2} fill="none" />
       <circle cx={10} cy={10} r={9} fill={color}
         style={{ opacity: checked ? 1 : 0, transition:'opacity 0.12s' }} />

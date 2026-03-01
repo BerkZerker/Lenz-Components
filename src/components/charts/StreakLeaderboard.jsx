@@ -22,7 +22,7 @@ export default function StreakLeaderboard({ theme, habits }) {
               </span>
               {habit.streak > 0 ? (
                 <div style={{ display:'flex', alignItems:'center', gap:3, flexShrink:0 }}>
-                  <svg width={12} height={12} viewBox="0 0 24 24" strokeWidth={0}>
+                  <svg width={12} height={12} viewBox="0 0 24 24" strokeWidth={0} aria-hidden="true">
                     <path d="M12 2s-5 4.5-5 9a5 5 0 0010 0c0-1.5-.8-3-1.5-4 0 0-.5 2-2 2s-2-1.5-2-2.5C11.5 5.5 12 2 12 2z" fill={color}/>
                   </svg>
                   <span style={{ fontSize:11, fontWeight:500, color:theme.textSecondary }}>{habit.streak}</span>

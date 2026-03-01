@@ -7,7 +7,7 @@ export default function RadialProgress({ theme, value, total, size = 120, stroke
   return (
     <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:8 }}>
       <div style={{ position:'relative', width:size, height:size }}>
-        <svg width={size} height={size} style={{ transform:'rotate(-90deg)' }}>
+        <svg width={size} height={size} aria-hidden="true" style={{ transform:'rotate(-90deg)' }}>
           <circle cx={c} cy={c} r={r} fill="none" stroke={theme.borderSubtle} strokeWidth={strokeWidth} />
           <circle cx={c} cy={c} r={r} fill="none" stroke={color || theme.accent}
             strokeWidth={strokeWidth} strokeLinecap="round"

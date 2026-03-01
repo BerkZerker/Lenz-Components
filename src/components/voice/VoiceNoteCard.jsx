@@ -1,5 +1,6 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
 import GlassCard from '../foundation/GlassCard';
+import { withAlpha } from '../../config/theme';
 
 function generateWaveform(n, seed = 1) {
   let s = seed;
@@ -37,12 +38,18 @@ function generateWaveform(n, seed = 1) {
   return bars;
 }
 
+function parseDurationMs(duration) {
+  const parts = duration.split(':');
+  const minutes = parseInt(parts[0], 10) || 0;
+  const seconds = parseInt(parts[1], 10) || 0;
+  return (minutes * 60 + seconds) * 1000;
+}
+
 export default function VoiceNoteCard({ theme, habitName, duration = '0:42', timestamp = '7:15 AM', color, seed = 1, transcription }) {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const waveform = useMemo(() => generateWaveform(28, seed), [seed]);
-  const intervalRef = useRef(null);
   const animRef = useRef(null);
   const canvasRef = useRef(null);
   const blobsRef = useRef(null);
@@ -50,13 +57,12 @@ export default function VoiceNoteCard({ theme, habitName, duration = '0:42', tim
 
   const togglePlay = () => {
     if (playing) {
-      clearInterval(intervalRef.current);
       cancelAnimationFrame(animRef.current);
       setPlaying(false);
     } else {
       setPlaying(true);
       const start = Date.now();
-      const totalMs = 4000;
+      const totalMs = parseDurationMs(duration);
       const animate = () => {
         const elapsed = Date.now() - start;
         const p = elapsed / totalMs;
@@ -75,7 +81,6 @@ export default function VoiceNoteCard({ theme, habitName, duration = '0:42', tim
   };
 
   useEffect(() => () => {
-    clearInterval(intervalRef.current);
     cancelAnimationFrame(animRef.current);
     cancelAnimationFrame(blobAnimRef.current);
   }, []);
@@ -165,9 +170,9 @@ export default function VoiceNoteCard({ theme, habitName, duration = '0:42', tim
       <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:12 }}>
         <div style={{
           width:28, height:28, borderRadius:8, flexShrink:0,
-          background: accentColor + '18', display:'flex', alignItems:'center', justifyContent:'center',
+          background: withAlpha(accentColor, 0.09), display:'flex', alignItems:'center', justifyContent:'center',
         }}>
-          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={accentColor} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={accentColor} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <rect x={9} y={1} width={6} height={12} rx={3} />
             <path d="M19 10v2a7 7 0 01-14 0v-2" />
             <line x1={12} y1={19} x2={12} y2={23} />
@@ -181,7 +186,10 @@ export default function VoiceNoteCard({ theme, habitName, duration = '0:42', tim
         <div style={{ fontSize:11, fontWeight:400, color:theme.textMuted, fontVariantNumeric:'tabular-nums' }}>{duration}</div>
       </div>
       <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-        <button onClick={togglePlay} style={{
+        <button
+          onClick={togglePlay}
+          aria-label={playing ? 'Pause voice note' : 'Play voice note'}
+          style={{
           width:36, height:36, borderRadius:9999, border:'none', cursor:'pointer',
           background: accentColor, display:'flex', alignItems:'center', justifyContent:'center',
           flexShrink:0, transition:'transform 0.1s',
@@ -191,18 +199,18 @@ export default function VoiceNoteCard({ theme, habitName, duration = '0:42', tim
           onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
         >
           {playing ? (
-            <svg width={14} height={14} viewBox="0 0 24 24" fill="white">
+            <svg width={14} height={14} viewBox="0 0 24 24" fill="white" aria-hidden="true">
               <rect x={6} y={4} width={4} height={16} rx={1} />
               <rect x={14} y={4} width={4} height={16} rx={1} />
             </svg>
           ) : (
-            <svg width={14} height={14} viewBox="0 0 24 24" fill="white">
+            <svg width={14} height={14} viewBox="0 0 24 24" fill="white" aria-hidden="true">
               <polygon points="7,3 20,12 7,21" />
             </svg>
           )}
         </button>
         <div style={{ flex:1, display:'flex', justifyContent:'center', overflow:'hidden' }}>
-          <svg width={svgW} height={svgH} style={{ display:'block' }}>
+          <svg width={svgW} height={svgH} style={{ display:'block' }} aria-hidden="true">
             {waveform.map((amp, i) => {
               const x = i * (BAR_W + BAR_GAP);
               const barProgress = i / barCount;
@@ -230,7 +238,7 @@ export default function VoiceNoteCard({ theme, habitName, duration = '0:42', tim
             width:36, height:36, borderRadius:9999, flexShrink:0,
             background: theme.surface2, display:'flex', alignItems:'center', justifyContent:'center',
           }}>
-            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={theme.textMuted} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={theme.textMuted} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
