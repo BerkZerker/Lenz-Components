@@ -126,3 +126,12 @@ export function makeTrend(n) {
   return arr;
 }
 
+export function makeMultiHabitTrend(habits, n) {
+  const perHabit = habits.map(h => ({ id: h.id, values: makeTrend(n) }));
+  return Array.from({ length: n }, (_, i) => {
+    const row = { index: i };
+    perHabit.forEach(h => { row[h.id] = h.values[i]; });
+    return row;
+  });
+}
+

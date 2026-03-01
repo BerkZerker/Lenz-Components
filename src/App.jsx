@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { THEMES } from './config/theme';
-import { INITIAL_HABITS, BAR_DATA, CORRELATION_DATA, makeTrend } from './data/mockData';
+import { INITIAL_HABITS, BAR_DATA, CORRELATION_DATA, makeMultiHabitTrend } from './data/mockData';
 
 import NoiseBackground from './components/foundation/NoiseBackground';
 import GlassCard from './components/foundation/GlassCard';
@@ -54,7 +54,7 @@ export default function App() {
   const [detailHabit, setDetailHabit] = useState(null);
   const [activeSection, setActiveSection] = useState('all');
 
-  const TREND_DATA = useMemo(() => makeTrend(365), []);
+  const TREND_DATA = useMemo(() => makeMultiHabitTrend(INITIAL_HABITS, 365), []);
 
   const show = (section) => activeSection === 'all' || activeSection === section;
 
@@ -140,7 +140,7 @@ export default function App() {
                 <HabitBarChart theme={theme} data={BAR_DATA} />
 
                 <SectionLabel theme={theme}>Trend</SectionLabel>
-                <CompletionTrendChart theme={theme} data={TREND_DATA} uid={mode} />
+                <CompletionTrendChart theme={theme} data={TREND_DATA} habits={INITIAL_HABITS} uid={mode} />
 
                 <SectionLabel theme={theme}>Leaderboard</SectionLabel>
                 <StreakLeaderboard theme={theme} habits={habits} />

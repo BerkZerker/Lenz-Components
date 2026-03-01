@@ -48,6 +48,8 @@ export const HABIT_COLORS = [
   { id: "amber", label: "Amber", primary: "#c99a4a" },
   { id: "rose", label: "Rose", primary: "#c46b8a" },
   { id: "slate", label: "Slate", primary: "#7a8a9e" },
+  { id: "cedar", label: "Cedar", primary: "#9a7b6b" },
+  { id: "ruby", label: "Ruby", primary: "#b86060" },
 ];
 
 export const getHabitColor = (id) =>
