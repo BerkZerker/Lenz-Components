@@ -45,7 +45,7 @@ function parseDurationMs(duration) {
   return (minutes * 60 + seconds) * 1000;
 }
 
-export default function VoiceNoteCard({ theme, habitName, duration = '0:42', timestamp = '7:15 AM', color, seed = 1, transcription }) {
+export default function VoiceNoteCard({ theme, habitName, duration = '0:42', timestamp = '7:15 AM', color, seed = 1, transcription, style = {} }) {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -155,7 +155,7 @@ export default function VoiceNoteCard({ theme, habitName, duration = '0:42', tim
   const transcript = transcription || "Had a really good morning session today. Felt focused after about 5 minutes and...";
 
   return (
-    <GlassCard theme={theme} style={{ padding:16, position:'relative', overflow:'hidden' }}>
+    <GlassCard theme={theme} style={{ padding:16, position:'relative', overflow:'hidden', ...style }}>
       <canvas
         ref={canvasRef}
         style={{

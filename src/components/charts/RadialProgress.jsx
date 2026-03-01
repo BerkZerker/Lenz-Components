@@ -1,11 +1,11 @@
-export default function RadialProgress({ theme, value, total, size = 120, strokeWidth = 8, color, label, sublabel }) {
+export default function RadialProgress({ theme, value, total, size = 120, strokeWidth = 8, color, label, sublabel, style = {} }) {
   const pct = total > 0 ? value / total : 0;
   const r = (size - strokeWidth) / 2;
   const circ = 2 * Math.PI * r;
   const offset = circ * (1 - pct);
   const c = size / 2;
   return (
-    <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:8 }}>
+    <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:8, ...style }}>
       <div style={{ position:'relative', width:size, height:size }}>
         <svg width={size} height={size} aria-hidden="true" style={{ transform:'rotate(-90deg)' }}>
           <circle cx={c} cy={c} r={r} fill="none" stroke={theme.borderSubtle} strokeWidth={strokeWidth} />

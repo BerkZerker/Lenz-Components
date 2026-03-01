@@ -3,7 +3,7 @@ import { Drawer } from 'vaul';
 import GlassCard from '../foundation/GlassCard';
 import { withAlpha, MAX_WIDTH } from '../../config/theme';
 
-export default function CorrelationCard({ theme, correlation }) {
+export default function CorrelationCard({ theme, correlation, style = {} }) {
   const { type, headline, detail, confidence, events } = correlation;
   const [open, setOpen] = useState(false);
   const trackRef = useRef(null);
@@ -60,7 +60,7 @@ export default function CorrelationCard({ theme, correlation }) {
         onKeyDown={hasEvents ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(true); } } : undefined}
         style={{ cursor: hasEvents ? 'pointer' : 'default' }}
       >
-        <GlassCard theme={theme} style={{ padding: 16 }}>
+        <GlassCard theme={theme} style={{ padding: 16, ...style }}>
           <div style={{ fontSize: 14, fontWeight: 500, color: theme.textPrimary, lineHeight: 1.35, marginBottom: 4 }}>
             {headline}
           </div>

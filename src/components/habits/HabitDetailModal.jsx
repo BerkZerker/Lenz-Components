@@ -3,8 +3,10 @@ import { Drawer } from 'vaul';
 import { getHabitColor, withAlpha, MAX_WIDTH, FONT_FAMILY, radius } from '../../config/theme';
 import RadialProgress from '../charts/RadialProgress';
 import VoiceNoteCard from '../voice/VoiceNoteCard';
+import Button from '../core/Button';
+import IconButton from '../core/IconButton';
 
-export default function HabitDetailModal({ theme, habit, onClose }) {
+export default function HabitDetailModal({ theme, habit, onClose, style = {} }) {
   const lastHabitRef = useRef(null);
   if (habit) lastHabitRef.current = habit;
   const displayHabit = habit || lastHabitRef.current;
@@ -49,14 +51,11 @@ export default function HabitDetailModal({ theme, habit, onClose }) {
                   <div style={{ fontSize:20, fontWeight:500, color:theme.textPrimary }}>{displayHabit.name}</div>
                   <div style={{ fontSize:12, fontWeight:300, color:theme.textMuted }}>{displayHabit.category}</div>
                 </div>
-                <button onClick={onClose} aria-label="Close" style={{
-                  width:32, height:32, borderRadius:radius.pill, border:'none', cursor:'pointer',
-                  background:theme.surface2, display:'flex', alignItems:'center', justifyContent:'center',
-                }}>
+                <IconButton theme={theme} onClick={onClose} ariaLabel="Close" size="md" variant="default">
                   <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={theme.textMuted} strokeWidth={2} strokeLinecap="round" aria-hidden="true">
                     <line x1={18} y1={6} x2={6} y2={18} /><line x1={6} y1={6} x2={18} y2={18} />
                   </svg>
-                </button>
+                </IconButton>
               </div>
 
               <div style={{ display:'flex', gap:12, marginBottom:20 }}>
@@ -120,16 +119,8 @@ export default function HabitDetailModal({ theme, habit, onClose }) {
               </div>
 
               <div style={{ display:'flex', gap:10 }}>
-                <button style={{
-                  flex:1, padding:'12px', borderRadius:radius.md, border:'none', cursor:'pointer',
-                  background:theme.accent, color:'white', fontSize:13, fontWeight:500,
-                  fontFamily:FONT_FAMILY,
-                }}>Edit Habit</button>
-                <button style={{
-                  padding:'12px 16px', borderRadius:radius.md, border:'none', cursor:'pointer',
-                  background:withAlpha(theme.danger, 0.09), color:theme.danger, fontSize:13, fontWeight:500,
-                  fontFamily:FONT_FAMILY,
-                }}>Delete</button>
+                <Button theme={theme} variant="primary" style={{ flex:1 }}>Edit Habit</Button>
+                <Button theme={theme} variant="ghost" style={{ color:theme.danger }}>Delete</Button>
               </div>
             </div>
           )}

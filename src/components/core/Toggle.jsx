@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import * as Switch from '@radix-ui/react-switch';
 
-export default function Toggle({ theme, checked, onChange, size = 'md' }) {
+export default function Toggle({ theme, checked, onChange, size = 'md', style = {} }) {
   const [hovered, setHovered] = useState(false);
   const sizes = { sm: { w:40, h:22, knob:16, pad:3 }, md: { w:48, h:26, knob:20, pad:3 }, lg: { w:56, h:30, knob:24, pad:3 } };
   const s = sizes[size] || sizes.md;
@@ -13,7 +13,7 @@ export default function Toggle({ theme, checked, onChange, size = 'md' }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         all:'unset', boxSizing:'border-box',
-        position:'relative', width:s.w, height:s.h, borderRadius:9999,
+        position:'relative', width:s.w, height:s.h, borderRadius:9999, ...style,
         background: checked ? theme.accentMuted : theme.border,
         cursor:'pointer', transition:'background 0.2s',
         opacity: hovered ? 0.85 : 1, flexShrink:0,

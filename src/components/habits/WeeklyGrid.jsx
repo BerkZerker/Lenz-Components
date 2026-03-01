@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { getHabitColor, withAlpha } from '../../config/theme';
 import GlassCard from '../foundation/GlassCard';
 
-export default function WeeklyGrid({ theme, habits }) {
+export default function WeeklyGrid({ theme, habits, style = {} }) {
   const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   const [grid, setGrid] = useState(() =>
     habits.map(h => ({
@@ -28,8 +28,8 @@ export default function WeeklyGrid({ theme, habits }) {
   };
 
   return (
-    <GlassCard theme={theme} style={{ padding:20 }}>
-      <div style={{ fontSize:14, fontWeight:500, color:theme.textPrimary, marginBottom:14 }}>Weekly Tracker</div>
+    <GlassCard theme={theme} style={{ padding:20, ...style }}>
+      <div style={{ fontSize:14, fontWeight:500, color:theme.textPrimary, marginBottom:12 }}>Weekly Tracker</div>
       <div style={{ display:'flex', alignItems:'center', marginBottom:8 }}>
         <div style={{ width:100, flexShrink:0 }} />
         {DAYS.map((d, i) => (

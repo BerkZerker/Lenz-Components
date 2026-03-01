@@ -2,13 +2,13 @@ import { useState } from 'react';
 import GlassCard from '../foundation/GlassCard';
 import { FONT_FAMILY } from '../../config/theme';
 
-export default function AddHabitButton({ theme }) {
+export default function AddHabitButton({ theme, style = {} }) {
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
 
   return (
     <GlassCard theme={theme} style={{
-      marginTop: 12,
+      marginTop: 12, ...style,
       cursor: 'pointer',
       transition: 'transform 0.1s',
       transform: pressed ? 'scale(0.98)' : 'scale(1)',

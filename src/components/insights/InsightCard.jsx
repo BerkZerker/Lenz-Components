@@ -1,11 +1,12 @@
 import GlassCard from '../foundation/GlassCard';
 import SparkleIcon from '../foundation/SparkleIcon';
 
-export default function InsightCard({ theme, title, description }) {
+export default function InsightCard({ theme, title, description, style = {} }) {
   return (
     <GlassCard theme={theme} style={{
       padding:14,
       display:'flex', gap:12, alignItems:'flex-start',
+      ...style,
     }}>
       <div style={{
         width:32, height:32, borderRadius:9, flexShrink:0,

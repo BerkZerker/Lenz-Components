@@ -4,7 +4,7 @@ import GlassCard from "../foundation/GlassCard";
 import AIBannerPill from "./AIBannerPill";
 import { withAlpha } from "../../config/theme";
 
-export default function SensitivitySlider({ theme }) {
+export default function SensitivitySlider({ theme, style = {} }) {
   const [value, setValue] = useState(50);
 
   const isLow = value < 33;
@@ -22,13 +22,13 @@ export default function SensitivitySlider({ theme }) {
       : "Only show insights with strong statistical backing";
 
   return (
-    <GlassCard theme={theme} style={{ padding: 20 }}>
+    <GlassCard theme={theme} style={{ padding: 20, ...style }}>
       <div
         style={{
           display: "flex",
           alignItems: "center",
           gap: 8,
-          marginBottom: 14,
+          marginBottom: 12,
         }}
       >
         <div

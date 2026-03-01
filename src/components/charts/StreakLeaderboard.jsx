@@ -2,10 +2,10 @@ import { useMemo } from 'react';
 import { getHabitColor } from '../../config/theme';
 import GlassCard from '../foundation/GlassCard';
 
-export default function StreakLeaderboard({ theme, habits }) {
+export default function StreakLeaderboard({ theme, habits, style = {} }) {
   const sorted = useMemo(() => [...habits].sort((a,b) => b.streak - a.streak), [habits]);
   return (
-    <GlassCard theme={theme} style={{ padding:20 }}>
+    <GlassCard theme={theme} style={{ padding:20, ...style }}>
       <div style={{ fontSize:14, fontWeight:500, color:theme.textPrimary, marginBottom:12 }}>Streak Leaderboard</div>
       <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
         {sorted.map((habit, idx) => {

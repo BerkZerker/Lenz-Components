@@ -2,7 +2,7 @@ import { useState } from 'react';
 import GlassCard from '../foundation/GlassCard';
 import Toggle from '../core/Toggle';
 
-export default function ToggleShowcase({ theme }) {
+export default function ToggleShowcase({ theme, style = {} }) {
   const [vals, setVals] = useState({ a:true, b:false, c:true });
   const flip = k => setVals(v => ({ ...v, [k]:!v[k] }));
   const rows = [
@@ -11,7 +11,7 @@ export default function ToggleShowcase({ theme }) {
     { key:'c', label:'Dark mode',     size:'lg' },
   ];
   return (
-    <GlassCard theme={theme} style={{ padding:20 }}>
+    <GlassCard theme={theme} style={{ padding:20, ...style }}>
       <div style={{ fontSize:14, fontWeight:500, color:theme.textPrimary, marginBottom:12 }}>Toggle</div>
       <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
         {rows.map(r => (

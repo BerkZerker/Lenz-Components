@@ -1,6 +1,6 @@
 import GlassCard from '../foundation/GlassCard';
 
-export default function ColorTokens({ theme }) {
+export default function ColorTokens({ theme, style = {} }) {
   const tokens = [
     ['bg', theme.bg], ['surface1', theme.surface1], ['surface2', theme.surface2],
     ['textPrimary', theme.textPrimary], ['textSecondary', theme.textSecondary], ['textMuted', theme.textMuted],
@@ -14,7 +14,7 @@ export default function ColorTokens({ theme }) {
     ['info', theme.info], ['warning', theme.warning],
   ];
   return (
-    <GlassCard theme={theme} style={{ padding:20 }}>
+    <GlassCard theme={theme} style={{ padding:20, ...style }}>
       <div style={{ fontSize:14, fontWeight:500, color:theme.textPrimary, marginBottom:12 }}>Color Tokens</div>
       <div style={{ display:'flex', flexDirection:'column', gap:7 }}>
         {tokens.map(([name, val]) => (

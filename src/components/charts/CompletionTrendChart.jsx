@@ -33,7 +33,7 @@ function CustomTooltip({ active, payload, theme, habits }) {
 const sliceData = (d, s) => s === 'week' ? d.slice(-7) : s === 'month' ? d.slice(-30) : d;
 const getXLabels = (s) => s === 'week' ? ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] : s === 'month' ? ['W1','W2','W3','W4'] : ['Jan','Apr','Jul','Oct','Dec'];
 
-export default function CompletionTrendChart({ theme, data, habits }) {
+export default function CompletionTrendChart({ theme, data, habits, style = {} }) {
   const [span, setSpan] = useState('week');
   const SPANS = [{ label:'Week', value:'week' }, { label:'Month', value:'month' }, { label:'Year', value:'year' }];
 
@@ -49,7 +49,7 @@ export default function CompletionTrendChart({ theme, data, habits }) {
   }, [data, span]);
 
   return (
-    <GlassCard theme={theme} style={{ padding: 20 }}>
+    <GlassCard theme={theme} style={{ padding: 20, ...style }}>
       <div style={{ fontSize: 14, fontWeight: 500, color: theme.textPrimary, marginBottom: 12 }}>Completion Trend</div>
       <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
         {SPANS.map(s => (

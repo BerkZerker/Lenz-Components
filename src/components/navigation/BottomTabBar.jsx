@@ -43,7 +43,7 @@ const MicIcon = () => (
   </svg>
 );
 
-export default function BottomTabBar({ theme, activeTab, onTabChange, onAddHabit, onVoiceNote, inline }) {
+export default function BottomTabBar({ theme, activeTab, onTabChange, onAddHabit, onVoiceNote, inline, style = {} }) {
   const [fabHovered, setFabHovered] = useState(false);
   const [fabPressed, setFabPressed] = useState(false);
 
@@ -121,6 +121,7 @@ export default function BottomTabBar({ theme, activeTab, onTabChange, onAddHabit
         position: 'fixed', bottom: 12, left: '50%', transform: 'translateX(-50%)',
         width: 'calc(100% - 24px)', maxWidth: MAX_WIDTH, zIndex: 100,
       }),
+      ...style,
     }}>
       <div style={{
         position: 'relative',
