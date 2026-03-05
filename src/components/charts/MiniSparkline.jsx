@@ -2,7 +2,7 @@ import React from 'react';
 import Svg, { Circle, Path, Polyline } from 'react-native-svg';
 import { withAlpha } from '../../config/theme';
 
-export default function MiniSparkline({ data, width = 64, height = 24, color, bgColor, style = {} }) {
+export default function MiniSparkline({ data, width = 64, height = 24, color, style = {} }) {
   if (!data || data.length === 0) return null;
 
   if (data.length === 1) {

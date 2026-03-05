@@ -278,7 +278,7 @@ export default function HabitDetailModal({ theme, habit, onClose, style = {} }) 
   if (habit) lastHabitRef.current = habit;
   const displayHabit = habit || lastHabitRef.current;
 
-  const color = displayHabit ? getHabitColor(displayHabit.colorId).primary : '#888';
+  const color = displayHabit ? getHabitColor(displayHabit.colorId).primary : theme.textMuted;
   const weekly = displayHabit?.weekly || [1, 1, 0, 1, 1, 1, 0];
   const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const completionRate = Math.round((weekly.filter(Boolean).length / 7) * 100);

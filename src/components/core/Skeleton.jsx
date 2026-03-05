@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Animated, StyleSheet, Easing } from 'react-native';
+import { Animated, Easing } from 'react-native';
 import { radius } from '../../config/theme';
 
 const VARIANT_DEFAULTS = {

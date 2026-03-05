@@ -8,7 +8,7 @@ export default function Modal({ theme, open, onOpenChange, title, children, acti
     <RNModal
       visible={open}
       animationType="slide"
-      transparent={true}
+      transparent
       onRequestClose={() => onOpenChange(false)}
     >
       {/* Semi-transparent overlay */}

@@ -6,8 +6,6 @@ import {
   StatusBar,
   Pressable,
   Animated,
-  Easing,
-  Dimensions,
   StyleSheet,
   Platform,
 } from 'react-native';
@@ -28,7 +26,7 @@ import Svg, {
   Polyline as SvgPolyline,
 } from 'react-native-svg';
 
-import { THEMES, MAX_WIDTH, radius, withAlpha } from './src/config/theme';
+import { THEMES, MAX_WIDTH, radius, getHabitColor } from './src/config/theme';
 import {
   INITIAL_HABITS,
   BAR_DATA,
@@ -634,7 +632,7 @@ export default function App() {
                       habitName="Morning Meditation"
                       duration="0:42"
                       timestamp="7:15 AM"
-                      color="#7a9e7e"
+                      color={getHabitColor('sage').primary}
                       seed={42}
                     />
                     <VoiceNoteCard
@@ -642,7 +640,7 @@ export default function App() {
                       habitName="Journal"
                       duration="1:18"
                       timestamp="9:12 PM"
-                      color="#9585c1"
+                      color={getHabitColor('lavender').primary}
                       seed={137}
                     />
                   </>
@@ -1082,10 +1080,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#212121',
+    backgroundColor: THEMES.dark.bg,
   },
   loadingText: {
-    color: '#9a9a9a',
+    color: THEMES.dark.textMuted,
     fontSize: 16,
   },
 });

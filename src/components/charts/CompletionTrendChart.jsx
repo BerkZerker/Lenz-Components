@@ -29,7 +29,7 @@ export default function CompletionTrendChart({ theme, data, habits, style = {} }
   const rightPadding = 8;
   const chartWidth = Math.min(screenWidth - 40, 380) - yAxisWidth - rightPadding;
 
-  const { dataSet, xLabels } = useMemo(() => {
+  const { dataSet } = useMemo(() => {
     const pts = sliceData(data, span);
     const labels = getXLabels(span);
 
@@ -51,7 +51,7 @@ export default function CompletionTrendChart({ theme, data, habits, style = {} }
       thickness: 1.25,
     }));
 
-    return { dataSet: sets, xLabels: labels };
+    return { dataSet: sets };
   }, [data, span, habits]);
 
   // Calculate spacing to fill chart width

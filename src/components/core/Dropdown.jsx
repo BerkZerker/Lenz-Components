@@ -8,7 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import Svg, { Polyline, Path } from 'react-native-svg';
+import Svg, { Polyline } from 'react-native-svg';
 import { radius } from '../../config/theme';
 
 export default function Dropdown({
@@ -74,7 +74,7 @@ export default function Dropdown({
         animationType="fade"
         onRequestClose={() => setOpen(false)}
       >
-        <Pressable style={styles.scrim} onPress={() => setOpen(false)}>
+        <Pressable style={[styles.scrim, { backgroundColor: theme.scrim }]} onPress={() => setOpen(false)}>
           <View
             style={[
               styles.modalContent,
@@ -152,7 +152,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.4)',
     paddingHorizontal: 40,
   },
   modalContent: {

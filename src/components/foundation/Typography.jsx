@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text } from 'react-native';
 
 const WEIGHT_TO_FAMILY = {
   300: 'Inter_300Light',
