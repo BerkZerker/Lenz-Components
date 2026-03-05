@@ -9,7 +9,6 @@ export function withAlpha(hex, opacity) {
 // Design tokens
 export const radius = { sm: 8, md: 12, lg: 14, pill: 9999 };
 export const MAX_WIDTH = 420;
-export const FONT_FAMILY = 'Inter, system-ui, sans-serif';
 
 export const THEMES = {
   dark: {

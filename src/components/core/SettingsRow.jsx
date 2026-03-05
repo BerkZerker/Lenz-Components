@@ -1,45 +1,46 @@
-import { FONT_FAMILY } from '../../config/theme';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import Toggle from './Toggle';
 
 export default function SettingsRow({ theme, label, description, checked, onChange, style = {} }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '12px 0',
-        gap: 12,
-        ...style,
-      }}
-    >
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div
-          style={{
-            fontSize: 14,
-            fontWeight: 400,
-            color: theme.textPrimary,
-            fontFamily: FONT_FAMILY,
-          }}
-        >
+    <View style={[styles.row, style]}>
+      <View style={styles.textContainer}>
+        <Text style={[styles.label, { color: theme.textPrimary }]}>
           {label}
-        </div>
+        </Text>
         {description && (
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: 300,
-              color: theme.textMuted,
-              marginTop: 2,
-              lineHeight: 1.4,
-              fontFamily: FONT_FAMILY,
-            }}
-          >
+          <Text style={[styles.description, { color: theme.textMuted }]}>
             {description}
-          </div>
+          </Text>
         )}
-      </div>
+      </View>
       <Toggle theme={theme} checked={checked} onChange={onChange} size="md" />
-    </div>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    gap: 12,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '400',
+    fontFamily: 'Inter_400Regular',
+  },
+  description: {
+    fontSize: 12,
+    fontWeight: '300',
+    fontFamily: 'Inter_300Light',
+    marginTop: 2,
+    lineHeight: 16.8,
+  },
+});

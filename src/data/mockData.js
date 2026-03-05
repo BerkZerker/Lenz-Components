@@ -134,4 +134,3 @@ export function makeMultiHabitTrend(habits, n) {
     return row;
   });
 }
-

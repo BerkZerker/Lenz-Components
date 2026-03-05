@@ -1,177 +1,206 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
+import { View, Text, Pressable, Platform } from 'react-native';
+import { BlurView } from 'expo-blur';
+import { BlurTargetContext } from '../foundation/GlassCard';
+import Svg, { Rect as SvgRect, Line, Path } from 'react-native-svg';
 import SparkleIcon from '../foundation/SparkleIcon';
-import { FONT_FAMILY, MAX_WIDTH } from '../../config/theme';
 
-const TABS = [
-  { id: 'today', label: 'Today', icon: (c) => (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <rect x={3} y={4} width={18} height={18} rx={2} />
-      <line x1={16} y1={2} x2={16} y2={6} /><line x1={8} y1={2} x2={8} y2={6} />
-      <line x1={3} y1={10} x2={21} y2={10} />
-      <rect x={8} y={14} width={3} height={3} rx={0.5} fill={c} stroke="none" />
-    </svg>
-  )},
-  { id: 'stats', label: 'Stats', icon: (c) => (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <rect x={4} y={14} width={4} height={7} rx={1} />
-      <rect x={10} y={8} width={4} height={13} rx={1} />
-      <rect x={16} y={3} width={4} height={18} rx={1} />
-    </svg>
-  )},
-  { id: 'insights', label: 'Insights', icon: (c) => (
-    <SparkleIcon size={22} color={c} strokeWidth={1.8} />
-  )},
-  { id: 'more', label: 'More', icon: (c) => (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <line x1={4} y1={6} x2={20} y2={6} /><line x1={4} y1={12} x2={20} y2={12} /><line x1={4} y1={18} x2={20} y2={18} />
-    </svg>
-  )},
-];
+const CalendarIcon = ({ color }) => (
+  <Svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+    <SvgRect x={3} y={4} width={18} height={18} rx={2} />
+    <Line x1={16} y1={2} x2={16} y2={6} />
+    <Line x1={8} y1={2} x2={8} y2={6} />
+    <Line x1={3} y1={10} x2={21} y2={10} />
+    <SvgRect x={8} y={14} width={3} height={3} rx={0.5} fill={color} stroke="none" />
+  </Svg>
+);
+
+const StatsIcon = ({ color }) => (
+  <Svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+    <SvgRect x={4} y={14} width={4} height={7} rx={1} />
+    <SvgRect x={10} y={8} width={4} height={13} rx={1} />
+    <SvgRect x={16} y={3} width={4} height={18} rx={1} />
+  </Svg>
+);
+
+const MenuIcon = ({ color }) => (
+  <Svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+    <Line x1={4} y1={6} x2={20} y2={6} />
+    <Line x1={4} y1={12} x2={20} y2={12} />
+    <Line x1={4} y1={18} x2={20} y2={18} />
+  </Svg>
+);
 
 const PlusIcon = () => (
-  <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5} strokeLinecap="round" aria-hidden="true">
-    <line x1={12} y1={5} x2={12} y2={19} /><line x1={5} y1={12} x2={19} y2={12} />
-  </svg>
+  <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5} strokeLinecap="round">
+    <Line x1={12} y1={5} x2={12} y2={19} />
+    <Line x1={5} y1={12} x2={19} y2={12} />
+  </Svg>
 );
 
 const MicIcon = () => (
-  <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <rect x={9} y={2} width={6} height={12} rx={3} />
-    <path d="M5 10a7 7 0 0 0 14 0" />
-    <line x1={12} y1={17} x2={12} y2={21} />
-    <line x1={8} y1={21} x2={16} y2={21} />
-  </svg>
+  <Svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <SvgRect x={9} y={2} width={6} height={12} rx={3} />
+    <Path d="M5 10a7 7 0 0 0 14 0" />
+    <Line x1={12} y1={17} x2={12} y2={21} />
+    <Line x1={8} y1={21} x2={16} y2={21} />
+  </Svg>
 );
 
-export default function BottomTabBar({ theme, activeTab, onTabChange, onAddHabit, onVoiceNote, inline, style = {} }) {
-  const [fabHovered, setFabHovered] = useState(false);
-  const [fabPressed, setFabPressed] = useState(false);
+const TABS = [
+  { id: 'today', label: 'Today', Icon: CalendarIcon },
+  { id: 'stats', label: 'Stats', Icon: StatsIcon },
+  { id: 'insights', label: 'Insights', Icon: null },
+  { id: 'more', label: 'More', Icon: MenuIcon },
+];
 
-  // Inject pulse keyframe
-  useEffect(() => {
-    const id = 'fab-pulse-keyframe';
-    if (document.getElementById(id)) return;
-    const style = document.createElement('style');
-    style.id = id;
-    style.textContent = `
-      @keyframes fabPulse {
-        0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-        50% { opacity: 0.25; transform: translate(-50%, -50%) scale(1.15); }
-      }
-    `;
-    document.head.appendChild(style);
-  }, []);
+export default function BottomTabBar({
+  theme,
+  activeTab,
+  onTabChange,
+  onAddHabit,
+  onVoiceNote,
+  inline,
+  style = {},
+}) {
+  const [fabPressed, setFabPressed] = useState(false);
 
   const leftTabs = TABS.filter(t => t.id === 'today' || t.id === 'stats');
   const rightTabs = TABS.filter(t => t.id === 'insights' || t.id === 'more');
 
   const isMic = activeTab === 'insights';
   const fabAction = isMic ? onVoiceNote : onAddHabit;
-  const fabScale = fabPressed ? 'scale(0.9)' : fabHovered ? 'scale(1.06)' : 'scale(1)';
-
-  const insetShadowColor = theme.mode === 'dark'
-    ? 'inset 0 1px 0 rgba(255,255,255,0.06)'
-    : 'inset 0 1px 0 rgba(255,255,255,0.5)';
 
   const renderTab = (tab) => {
     const active = activeTab === tab.id;
     const color = active ? theme.accent : theme.textMuted;
+
     return (
-      <button
+      <Pressable
         key={tab.id}
-        onClick={() => onTabChange(tab.id)}
-        role="tab"
-        aria-selected={active}
-        aria-current={active ? 'page' : undefined}
+        onPress={() => onTabChange(tab.id)}
+        accessibilityRole="tab"
+        accessibilityState={{ selected: active }}
         style={{
-        flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
-        background: 'none', border: 'none', cursor: 'pointer', padding: '6px 0',
-        position: 'relative',
-      }}>
+          flex: 1,
+          alignItems: 'center',
+          gap: 3,
+          paddingVertical: 6,
+        }}
+      >
         {/* Active glow rectangle behind icon */}
-        <div style={{
-          position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          width: 36, height: 28, borderRadius: 12,
-          background: active ? theme.accentGlass : 'transparent',
-          transition: 'background 0.2s ease',
+        <View style={{
+          width: 36,
+          height: 28,
+          borderRadius: 12,
+          backgroundColor: active ? theme.accentGlass : 'transparent',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}>
-          {tab.icon(color)}
-        </div>
-        <span style={{
-          fontSize: 10, fontWeight: active ? 600 : 400, color,
-          fontFamily: FONT_FAMILY,
-          transition: 'color 0.2s, font-weight 0.2s',
+          {tab.id === 'insights' ? (
+            <SparkleIcon size={22} color={color} strokeWidth={1.8} />
+          ) : (
+            <tab.Icon color={color} />
+          )}
+        </View>
+        <Text style={{
+          fontSize: 10,
+          fontFamily: active ? 'Inter_600SemiBold' : 'Inter_400Regular',
+          color,
         }}>
           {tab.label}
-        </span>
+        </Text>
         {/* Glowing dot under label */}
-        <div style={{
-          width: 4, height: 4, borderRadius: 9999,
-          background: active ? theme.accent : 'transparent',
-          boxShadow: 'none',
-          transition: 'background 0.2s, box-shadow 0.2s',
+        <View style={{
+          width: 4,
+          height: 4,
+          borderRadius: 9999,
+          backgroundColor: active ? theme.accent : 'transparent',
         }} />
-      </button>
+      </Pressable>
     );
   };
 
+  const tint = theme.mode === 'dark' ? 'dark' : 'light';
+  const blurTarget = useContext(BlurTargetContext);
+  const blurProps = Platform.OS === 'android' && blurTarget
+    ? { blurTarget, blurMethod: 'dimezisBlurView' }
+    : {};
+
   return (
-    <nav aria-label="Main navigation" style={{
-      ...(inline ? {} : {
-        position: 'fixed', bottom: 12, left: '50%', transform: 'translateX(-50%)',
-        width: 'calc(100% - 24px)', maxWidth: MAX_WIDTH, zIndex: 100,
-      }),
-      ...style,
-    }}>
-      <div style={{
-        position: 'relative',
-        background: theme.glassBackground,
-        border: `1px solid ${theme.glassBorder}`,
+    <View
+      accessibilityRole="tablist"
+      accessibilityLabel="Main navigation"
+      style={{
+        ...(inline ? {} : {
+          position: 'absolute',
+          bottom: 12,
+          left: 12,
+          right: 12,
+          zIndex: 100,
+        }),
+        ...style,
+      }}
+    >
+      <View style={{
         borderRadius: 22,
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        boxShadow: `${insetShadowColor}, 0 8px 32px rgba(0,0,0,0.2)`,
-        display: 'flex', alignItems: 'center',
-        padding: '4px 0',
+        borderWidth: 1,
+        borderColor: theme.glassBorder,
         overflow: 'hidden',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.2,
+        shadowRadius: 32,
+        elevation: 12,
       }}>
-        {/* Left tabs */}
-        <div role="tablist" style={{ flex: 1, display: 'flex', position: 'relative', zIndex: 1 }}>
-          {leftTabs.map(renderTab)}
-        </div>
+        <BlurView
+          intensity={48}
+          tint={tint}
+          {...blurProps}
+          style={{
+            backgroundColor: theme.glassBackground,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingVertical: 4,
+          }}
+        >
+          {/* Left tabs */}
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            {leftTabs.map(renderTab)}
+          </View>
 
-        {/* Center FAB */}
-        <div style={{
-          position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          width: 64, flexShrink: 0, zIndex: 1,
-        }}>
-          <button
-            onClick={fabAction}
-            onMouseEnter={() => setFabHovered(true)}
-            onMouseLeave={() => { setFabHovered(false); setFabPressed(false); }}
-            onMouseDown={() => setFabPressed(true)}
-            onMouseUp={() => setFabPressed(false)}
-            aria-label={isMic ? 'Record voice note' : 'Add new habit'}
-            style={{
-              width: 54, height: 54, borderRadius: 9999,
-              background: theme.accent,
-              border: 'none',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer',
-              boxShadow: 'none',
-              transform: fabScale,
-              transition: 'transform 0.15s ease',
-            }}
-          >
-            {isMic ? <MicIcon /> : <PlusIcon />}
-          </button>
-        </div>
+          {/* Center FAB */}
+          <View style={{
+            width: 64,
+            flexShrink: 0,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <Pressable
+              onPress={fabAction}
+              onPressIn={() => setFabPressed(true)}
+              onPressOut={() => setFabPressed(false)}
+              accessibilityLabel={isMic ? 'Record voice note' : 'Add new habit'}
+              style={{
+                width: 54,
+                height: 54,
+                borderRadius: 9999,
+                backgroundColor: theme.accent,
+                alignItems: 'center',
+                justifyContent: 'center',
+                transform: [{ scale: fabPressed ? 0.9 : 1 }],
+              }}
+            >
+              {isMic ? <MicIcon /> : <PlusIcon />}
+            </Pressable>
+          </View>
 
-        {/* Right tabs */}
-        <div role="tablist" style={{ flex: 1, display: 'flex', position: 'relative', zIndex: 1 }}>
-          {rightTabs.map(renderTab)}
-        </div>
-      </div>
-    </nav>
+          {/* Right tabs */}
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            {rightTabs.map(renderTab)}
+          </View>
+        </BlurView>
+      </View>
+    </View>
   );
 }

@@ -1,49 +1,109 @@
-import { useState } from 'react';
+import React from 'react';
+import { View, Text, Pressable, TouchableOpacity, StyleSheet } from 'react-native';
+import Svg, { Polyline } from 'react-native-svg';
 import { getHabitColor } from '../../config/theme';
 import Checkmark from '../core/Checkmark';
 
 export default function HabitCard({ theme, habit, onChange, isLast, onClick, style = {} }) {
   const color = getHabitColor(habit.colorId).primary;
-  const [hovered, setHovered] = useState(false);
-  const [pressed, setPressed] = useState(false);
+
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      aria-label={`${habit.name}, ${habit.completed ? 'completed' : 'not completed'}`}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick && onClick(habit); } }}
-      style={{
-        display:'flex', alignItems:'center', padding:'13px 4px', gap:10,
-        borderBottom: !isLast ? `1px solid ${theme.borderSubtle}` : undefined,
-        background: pressed ? theme.pressOverlay : hovered ? theme.hoverOverlay : 'transparent',
-        transition:'background 0.1s',
-        borderRadius:10, cursor:'pointer',
-        ...style,
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => { setHovered(false); setPressed(false); }}
-      onMouseDown={() => setPressed(true)}
-      onMouseUp={() => setPressed(false)}
+    <Pressable
+      onPress={() => onClick && onClick(habit)}
+      style={({ pressed }) => [
+        styles.row,
+        {
+          borderBottomWidth: !isLast ? StyleSheet.hairlineWidth : 0,
+          borderBottomColor: !isLast ? theme.borderSubtle : 'transparent',
+          opacity: pressed ? 0.85 : 1,
+        },
+        style,
+      ]}
+      accessibilityRole="button"
+      accessibilityLabel={`${habit.name}, ${habit.completed ? 'completed' : 'not completed'}`}
     >
-      <div style={{ flexShrink:0, padding:2, cursor:'pointer' }} onClick={(e) => { e.stopPropagation(); onChange(habit.id); }}>
+      {/* Checkmark - separate press target */}
+      <TouchableOpacity
+        onPress={() => onChange(habit.id)}
+        style={styles.checkmarkHitArea}
+        activeOpacity={0.7}
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked: habit.completed }}
+        accessibilityLabel={`Mark ${habit.name} as ${habit.completed ? 'not completed' : 'completed'}`}
+      >
         <Checkmark checked={habit.completed} color={color} size={21} />
-      </div>
-      <div style={{ flex:1, display:'flex', alignItems:'center', gap:12, minWidth:0 }} onClick={() => onClick && onClick(habit)}>
-        <div style={{ flex:1, minWidth:0 }}>
-          <div style={{
-            fontSize:16, fontWeight:300,
-            color: habit.completed ? theme.textMuted : theme.textPrimary,
-            textDecoration: habit.completed ? 'line-through' : 'none',
-            whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', marginBottom:2,
-          }}>{habit.name}</div>
-          <div style={{ fontSize:11, fontWeight:300, color:theme.textMuted }}>{habit.category}</div>
-        </div>
-        <svg width={17} height={17} viewBox="0 0 24 24" fill="none"
-          stroke={theme.textMuted} strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round"
-          aria-hidden="true">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-      </div>
-    </div>
+      </TouchableOpacity>
+
+      {/* Name + Category + Chevron */}
+      <View style={styles.content}>
+        <View style={styles.textContainer}>
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.name,
+              {
+                color: habit.completed ? theme.textMuted : theme.textPrimary,
+                textDecorationLine: habit.completed ? 'line-through' : 'none',
+              },
+            ]}
+          >
+            {habit.name}
+          </Text>
+          <Text style={[styles.category, { color: theme.textMuted }]}>
+            {habit.category}
+          </Text>
+        </View>
+
+        {/* Chevron */}
+        <Svg
+          width={17}
+          height={17}
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <Polyline
+            points="9 18 15 12 9 6"
+            stroke={theme.textMuted}
+            strokeWidth={1.2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+        </Svg>
+      </View>
+    </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 13,
+    paddingHorizontal: 4,
+    gap: 10,
+    borderRadius: 10,
+  },
+  checkmarkHitArea: {
+    flexShrink: 0,
+    padding: 2,
+  },
+  content: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 16,
+    fontFamily: 'Inter_300Light',
+    marginBottom: 2,
+  },
+  category: {
+    fontSize: 11,
+    fontFamily: 'Inter_300Light',
+  },
+});

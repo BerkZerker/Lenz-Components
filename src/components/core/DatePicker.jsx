@@ -1,11 +1,19 @@
-import { useState } from 'react';
-import { radius, FONT_FAMILY } from '../../config/theme';
+import React, { useState } from 'react';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
+import Svg, { Polyline } from 'react-native-svg';
+import { radius } from '../../config/theme';
+
+const DAY_HEADERS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
 export default function DatePicker({ theme, value, onChange, style = {} }) {
-  const [viewDate, setViewDate] = useState(() => new Date(value.getFullYear(), value.getMonth(), 1));
+  const [viewDate, setViewDate] = useState(
+    () => new Date(value.getFullYear(), value.getMonth(), 1)
+  );
 
-  const prevMonth = () => setViewDate(d => new Date(d.getFullYear(), d.getMonth() - 1, 1));
-  const nextMonth = () => setViewDate(d => new Date(d.getFullYear(), d.getMonth() + 1, 1));
+  const prevMonth = () =>
+    setViewDate((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1));
+  const nextMonth = () =>
+    setViewDate((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1));
 
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
@@ -14,7 +22,10 @@ export default function DatePicker({ theme, value, onChange, style = {} }) {
   const startOffset = (firstDay + 6) % 7; // Shift so Monday=0
   const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
 
-  const monthYearLabel = viewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const monthYearLabel = viewDate.toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric',
+  });
 
   const today = new Date();
 
@@ -28,123 +39,183 @@ export default function DatePicker({ theme, value, onChange, style = {} }) {
   }
 
   return (
-    <div style={{ ...style }}>
+    <View style={style}>
       {/* Header: month/year with nav arrows */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 12,
-      }}>
-        <button
-          onClick={prevMonth}
-          aria-label="Previous month"
-          style={{
-            width: 28,
-            height: 28,
-            borderRadius: radius.pill,
-            border: 'none',
-            cursor: 'pointer',
-            background: theme.surface2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+      <View style={styles.header}>
+        <Pressable
+          onPress={prevMonth}
+          accessibilityLabel="Previous month"
+          style={({ pressed }) => [
+            styles.navButton,
+            {
+              backgroundColor: theme.surface2,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
         >
-          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={theme.textMuted} strokeWidth={2} strokeLinecap="round" aria-hidden="true">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </button>
-        <div style={{
-          fontSize: 14,
-          fontWeight: 500,
-          color: theme.textPrimary,
-          fontFamily: FONT_FAMILY,
-        }}>
+          <Svg
+            width={14}
+            height={14}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke={theme.textMuted}
+            strokeWidth={2}
+            strokeLinecap="round"
+          >
+            <Polyline points="15 18 9 12 15 6" />
+          </Svg>
+        </Pressable>
+
+        <Text style={[styles.monthYear, { color: theme.textPrimary }]}>
           {monthYearLabel}
-        </div>
-        <button
-          onClick={nextMonth}
-          aria-label="Next month"
-          style={{
-            width: 28,
-            height: 28,
-            borderRadius: radius.pill,
-            border: 'none',
-            cursor: 'pointer',
-            background: theme.surface2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+        </Text>
+
+        <Pressable
+          onPress={nextMonth}
+          accessibilityLabel="Next month"
+          style={({ pressed }) => [
+            styles.navButton,
+            {
+              backgroundColor: theme.surface2,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
         >
-          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={theme.textMuted} strokeWidth={2} strokeLinecap="round" aria-hidden="true">
-            <polyline points="9 6 15 12 9 18" />
-          </svg>
-        </button>
-      </div>
+          <Svg
+            width={14}
+            height={14}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke={theme.textMuted}
+            strokeWidth={2}
+            strokeLinecap="round"
+          >
+            <Polyline points="9 6 15 12 9 18" />
+          </Svg>
+        </Pressable>
+      </View>
 
       {/* Day headers */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(7, 1fr)',
-        gap: 2,
-        marginBottom: 4,
-      }}>
-        {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (
-          <div key={i} style={{
-            textAlign: 'center',
-            fontSize: 10,
-            fontWeight: 500,
-            color: theme.textMuted,
-            padding: '4px 0',
-            fontFamily: FONT_FAMILY,
-          }}>
-            {d}
-          </div>
+      <View style={styles.dayHeaderRow}>
+        {DAY_HEADERS.map((d, i) => (
+          <View key={i} style={styles.dayHeaderCell}>
+            <Text style={[styles.dayHeaderText, { color: theme.textMuted }]}>
+              {d}
+            </Text>
+          </View>
         ))}
-      </div>
+      </View>
 
       {/* Calendar grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(7, 1fr)',
-        gap: 2,
-      }}>
+      <View style={styles.grid}>
         {cells.map((cell, i) => {
-          if (!cell) return <div key={i} />;
+          if (cell === null) {
+            return <View key={i} style={styles.dayCell} />;
+          }
 
-          const isSelected = value.getFullYear() === year && value.getMonth() === month && value.getDate() === cell;
-          const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === cell;
+          const isSelected =
+            value.getFullYear() === year &&
+            value.getMonth() === month &&
+            value.getDate() === cell;
+          const isToday =
+            today.getFullYear() === year &&
+            today.getMonth() === month &&
+            today.getDate() === cell;
 
           return (
-            <button
-              key={i}
-              onClick={() => onChange(new Date(year, month, cell))}
-              aria-label={`${cell} ${monthYearLabel}`}
-              aria-current={isToday ? 'date' : undefined}
-              style={{
-                width: '100%',
-                aspectRatio: '1',
-                borderRadius: radius.lg,
-                border: 'none',
-                cursor: 'pointer',
-                background: isSelected ? theme.accent : isToday ? theme.accentFaint : 'transparent',
-                color: isSelected ? 'white' : isToday ? theme.accent : theme.textPrimary,
-                fontSize: 12,
-                fontWeight: isSelected || isToday ? 500 : 400,
-                fontFamily: FONT_FAMILY,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'background 0.15s',
-              }}
-            >
-              {cell}
-            </button>
+            <View key={i} style={styles.dayCell}>
+              <Pressable
+                onPress={() => onChange(new Date(year, month, cell))}
+                accessibilityLabel={`${cell} ${monthYearLabel}`}
+                style={({ pressed }) => [
+                  styles.dayButton,
+                  {
+                    borderRadius: radius.lg,
+                    backgroundColor: isSelected
+                      ? theme.accent
+                      : isToday
+                        ? theme.accentFaint
+                        : 'transparent',
+                    opacity: pressed ? 0.7 : 1,
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.dayText,
+                    {
+                      color: isSelected
+                        ? 'white'
+                        : isToday
+                          ? theme.accent
+                          : theme.textPrimary,
+                      fontWeight: isSelected || isToday ? '500' : '400',
+                      fontFamily:
+                        isSelected || isToday
+                          ? 'Inter_500Medium'
+                          : 'Inter_400Regular',
+                    },
+                  ]}
+                >
+                  {cell}
+                </Text>
+              </Pressable>
+            </View>
           );
         })}
-      </div>
-    </div>
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  navButton: {
+    width: 28,
+    height: 28,
+    borderRadius: 9999,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  monthYear: {
+    fontSize: 14,
+    fontWeight: '500',
+    fontFamily: 'Inter_500Medium',
+  },
+  dayHeaderRow: {
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  dayHeaderCell: {
+    width: '14.28%',
+    alignItems: 'center',
+    paddingVertical: 4,
+  },
+  dayHeaderText: {
+    fontSize: 10,
+    fontWeight: '500',
+    fontFamily: 'Inter_500Medium',
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  dayCell: {
+    width: '14.28%',
+    aspectRatio: 1,
+    padding: 1,
+  },
+  dayButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dayText: {
+    fontSize: 12,
+  },
+});

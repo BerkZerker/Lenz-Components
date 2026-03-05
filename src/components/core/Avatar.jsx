@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { radius, FONT_FAMILY } from '../../config/theme';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import { radius } from '../../config/theme';
 
 const SIZES = {
   sm: { px: 24, fontSize: 10 },
@@ -23,44 +24,54 @@ export default function Avatar({ theme, name, src, size = 'md', style = {} }) {
   const showImage = src && !imgError;
 
   return (
-    <div
-      style={{
-        width: config.px,
-        height: config.px,
-        borderRadius: radius.pill,
-        overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-        background: showImage ? 'transparent' : theme.surface3,
-        ...style,
-      }}
+    <View
+      style={[
+        styles.container,
+        {
+          width: config.px,
+          height: config.px,
+          borderRadius: radius.pill,
+          backgroundColor: showImage ? 'transparent' : theme.surface3,
+        },
+        style,
+      ]}
     >
       {showImage ? (
-        <img
-          src={src}
-          alt={name}
+        <Image
+          source={typeof src === 'string' ? { uri: src } : src}
           onError={() => setImgError(true)}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
+          style={styles.image}
+          accessibilityLabel={name}
         />
       ) : (
-        <span
-          style={{
-            fontSize: config.fontSize,
-            fontWeight: 500,
-            fontFamily: FONT_FAMILY,
-            color: theme.textSecondary,
-            lineHeight: 1,
-          }}
+        <Text
+          style={[
+            styles.initials,
+            {
+              fontSize: config.fontSize,
+              color: theme.textSecondary,
+            },
+          ]}
         >
           {getInitials(name)}
-        </span>
+        </Text>
       )}
-    </div>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  initials: {
+    fontWeight: '500',
+    fontFamily: 'Inter_500Medium',
+  },
+});

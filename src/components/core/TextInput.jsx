@@ -1,63 +1,81 @@
-import { useState } from 'react';
-import { FONT_FAMILY, radius } from '../../config/theme';
+import React, { useState } from 'react';
+import { View, Text, TextInput as RNTextInput, StyleSheet } from 'react-native';
+import { radius } from '../../config/theme';
 
-export default function TextInput({ theme, label, value, onChange, placeholder = '', error, type = 'text', style = {} }) {
+export default function TextInput({
+  theme,
+  label,
+  value,
+  onChangeText,
+  placeholder = '',
+  error,
+  keyboardType = 'default',
+  secureTextEntry = false,
+  style = {},
+}) {
   const [focused, setFocused] = useState(false);
 
+  const borderColor = error
+    ? theme.danger
+    : focused
+      ? theme.accent
+      : theme.borderSubtle;
+
   return (
-    <div style={{ ...style }}>
+    <View style={style}>
       {label && (
-        <label
-          style={{
-            fontSize: 12,
-            fontWeight: 500,
-            color: theme.textSecondary,
-            marginBottom: 6,
-            display: 'block',
-            fontFamily: FONT_FAMILY,
-          }}
-        >
+        <Text style={[styles.label, { color: theme.textSecondary }]}>
           {label}
-        </label>
+        </Text>
       )}
-      <div style={{ position: 'relative' }}>
-        <input
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          aria-invalid={!!error}
-          style={{
-            width: '100%',
-            boxSizing: 'border-box',
-            padding: '10px 12px',
+      <RNTextInput
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor={theme.textMuted}
+        keyboardType={keyboardType}
+        secureTextEntry={secureTextEntry}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        selectionColor={theme.accent}
+        style={[
+          styles.input,
+          {
             borderRadius: radius.md,
-            background: theme.surface2,
-            border: `1.5px solid ${error ? theme.danger : focused ? theme.accent : theme.borderSubtle}`,
+            backgroundColor: theme.surface2,
+            borderColor,
             color: theme.textPrimary,
-            fontSize: 14,
-            fontWeight: 400,
-            fontFamily: FONT_FAMILY,
-            outline: 'none',
-            transition: 'border-color 0.15s',
-            caretColor: theme.accent,
-          }}
-        />
-      </div>
+          },
+        ]}
+      />
       {error && (
-        <div
-          style={{
-            fontSize: 11,
-            fontWeight: 400,
-            color: theme.danger,
-            marginTop: 5,
-          }}
-        >
+        <Text style={[styles.error, { color: theme.danger }]}>
           {error}
-        </div>
+        </Text>
       )}
-    </div>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  label: {
+    fontSize: 12,
+    fontWeight: '500',
+    fontFamily: 'Inter_500Medium',
+    marginBottom: 6,
+  },
+  input: {
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1.5,
+    fontSize: 14,
+    fontWeight: '400',
+    fontFamily: 'Inter_400Regular',
+  },
+  error: {
+    fontSize: 11,
+    fontWeight: '400',
+    fontFamily: 'Inter_400Regular',
+    marginTop: 5,
+  },
+});

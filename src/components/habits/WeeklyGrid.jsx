@@ -1,77 +1,155 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 import { getHabitColor, withAlpha } from '../../config/theme';
 import GlassCard from '../foundation/GlassCard';
 
 export default function WeeklyGrid({ theme, habits, style = {} }) {
-  const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
   const [grid, setGrid] = useState(() =>
-    habits.map(h => ({
+    habits.map((h) => ({
       ...h,
-      weekly: h.weekly || Array.from({ length: 7 }, () => Math.random() > 0.4 ? 1 : 0),
+      weekly: h.weekly || Array.from({ length: 7 }, () => (Math.random() > 0.4 ? 1 : 0)),
     }))
   );
 
   useEffect(() => {
-    setGrid(habits.map(h => ({
-      ...h,
-      weekly: h.weekly || Array.from({ length: 7 }, () => Math.random() > 0.4 ? 1 : 0),
-    })));
+    setGrid(
+      habits.map((h) => ({
+        ...h,
+        weekly: h.weekly || Array.from({ length: 7 }, () => (Math.random() > 0.4 ? 1 : 0)),
+      }))
+    );
   }, [habits]);
 
   const toggleCell = (habitIdx, dayIdx) => {
-    setGrid(prev => prev.map((h, i) => {
-      if (i !== habitIdx) return h;
-      const w = [...h.weekly];
-      w[dayIdx] = w[dayIdx] ? 0 : 1;
-      return { ...h, weekly: w };
-    }));
+    setGrid((prev) =>
+      prev.map((h, i) => {
+        if (i !== habitIdx) return h;
+        const w = [...h.weekly];
+        w[dayIdx] = w[dayIdx] ? 0 : 1;
+        return { ...h, weekly: w };
+      })
+    );
   };
 
   return (
-    <GlassCard theme={theme} style={{ padding:20, ...style }}>
-      <div style={{ fontSize:14, fontWeight:500, color:theme.textPrimary, marginBottom:12 }}>Weekly Tracker</div>
-      <div style={{ display:'flex', alignItems:'center', marginBottom:8 }}>
-        <div style={{ width:100, flexShrink:0 }} />
+    <GlassCard theme={theme} style={[{ padding: 20 }, style]}>
+      {/* Title */}
+      <Text style={[styles.title, { color: theme.textPrimary }]}>Weekly Tracker</Text>
+
+      {/* Day header row */}
+      <View style={styles.headerRow}>
+        <View style={styles.nameColumn} />
         {DAYS.map((d, i) => (
-          <div key={i} style={{ flex:1, textAlign:'center', fontSize:10, fontWeight:500, color:theme.textMuted }}>{d}</div>
+          <View key={i} style={styles.dayHeaderCell}>
+            <Text style={[styles.dayHeaderText, { color: theme.textMuted }]}>{d}</Text>
+          </View>
         ))}
-      </div>
-      <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+      </View>
+
+      {/* Habit rows */}
+      <View style={styles.gridBody}>
         {grid.map((habit, hi) => {
           const color = getHabitColor(habit.colorId).primary;
           return (
-            <div key={habit.id} style={{ display:'flex', alignItems:'center' }}>
-              <div style={{
-                width:100, flexShrink:0, fontSize:12, fontWeight:300, color:theme.textSecondary,
-                overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', paddingRight:8,
-              }}>{habit.name}</div>
+            <View key={habit.id} style={styles.habitRow}>
+              {/* Habit name */}
+              <View style={styles.nameColumn}>
+                <Text
+                  numberOfLines={1}
+                  style={[styles.habitName, { color: theme.textSecondary }]}
+                >
+                  {habit.name}
+                </Text>
+              </View>
+
+              {/* 7 day cells */}
               {habit.weekly.map((val, di) => (
-                <div key={di} style={{ flex:1, display:'flex', justifyContent:'center' }}>
-                  <button
-                    onClick={() => toggleCell(hi, di)}
-                    aria-label={`${DAYS[di]}, ${habit.name}, ${val ? 'completed' : 'not completed'}`}
-                    style={{
-                      width:28, height:28, borderRadius:8, border:'none', cursor:'pointer',
-                      background: val ? withAlpha(color, 0.19) : theme.borderSubtle,
-                      display:'flex', alignItems:'center', justifyContent:'center',
-                      transition:'background 0.15s, transform 0.1s',
-                    }}
-                    onMouseDown={e => e.currentTarget.style.transform = 'scale(0.88)'}
-                    onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                <View key={di} style={styles.cellContainer}>
+                  <Pressable
+                    onPress={() => toggleCell(hi, di)}
+                    style={({ pressed }) => [
+                      styles.cell,
+                      {
+                        backgroundColor: val
+                          ? withAlpha(color, 0.19)
+                          : theme.borderSubtle,
+                        transform: [{ scale: pressed ? 0.88 : 1 }],
+                      },
+                    ]}
+                    accessibilityRole="checkbox"
+                    accessibilityState={{ checked: !!val }}
+                    accessibilityLabel={`${DAYS[di]}, ${habit.name}, ${val ? 'completed' : 'not completed'}`}
                   >
                     {val ? (
-                      <svg width={14} height={14} viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                        <path d="M5 10.5L8.5 14L15 6.5" stroke={color} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                      <Svg width={14} height={14} viewBox="0 0 20 20" fill="none">
+                        <Path
+                          d="M5 10.5L8.5 14L15 6.5"
+                          stroke={color}
+                          strokeWidth={2.2}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          fill="none"
+                        />
+                      </Svg>
                     ) : null}
-                  </button>
-                </div>
+                  </Pressable>
+                </View>
               ))}
-            </div>
+            </View>
           );
         })}
-      </div>
+      </View>
     </GlassCard>
   );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 14,
+    fontFamily: 'Inter_500Medium',
+    marginBottom: 12,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  nameColumn: {
+    width: 100,
+    flexShrink: 0,
+    paddingRight: 8,
+  },
+  dayHeaderCell: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  dayHeaderText: {
+    fontSize: 10,
+    fontFamily: 'Inter_500Medium',
+  },
+  gridBody: {
+    gap: 6,
+  },
+  habitRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  habitName: {
+    fontSize: 12,
+    fontFamily: 'Inter_300Light',
+  },
+  cellContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  cell: {
+    width: 28,
+    height: 28,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

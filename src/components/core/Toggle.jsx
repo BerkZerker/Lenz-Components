@@ -1,33 +1,80 @@
-import { useState } from 'react';
-import * as Switch from '@radix-ui/react-switch';
+import React, { useRef, useEffect } from 'react';
+import { Pressable, Animated, StyleSheet } from 'react-native';
+
+const SIZES = {
+  sm: { w: 40, h: 22, knob: 16, pad: 3 },
+  md: { w: 48, h: 26, knob: 20, pad: 3 },
+  lg: { w: 56, h: 30, knob: 24, pad: 3 },
+};
 
 export default function Toggle({ theme, checked, onChange, size = 'md', style = {} }) {
-  const [hovered, setHovered] = useState(false);
-  const sizes = { sm: { w:40, h:22, knob:16, pad:3 }, md: { w:48, h:26, knob:20, pad:3 }, lg: { w:56, h:30, knob:24, pad:3 } };
-  const s = sizes[size] || sizes.md;
+  const s = SIZES[size] || SIZES.md;
+  const animValue = useRef(new Animated.Value(checked ? 1 : 0)).current;
+
+  useEffect(() => {
+    Animated.timing(animValue, {
+      toValue: checked ? 1 : 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [checked]);
+
+  const knobLeft = animValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [s.pad, s.w - s.knob - s.pad],
+  });
+
+  const trackColor = animValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [theme.border, theme.accentMuted],
+  });
+
+  const knobColor = animValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [theme.textMuted, theme.accent],
+  });
+
   return (
-    <Switch.Root
-      checked={checked}
-      onCheckedChange={(checked) => onChange(checked)}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        all:'unset', boxSizing:'border-box',
-        position:'relative', width:s.w, height:s.h, borderRadius:9999, ...style,
-        background: checked ? theme.accentMuted : theme.border,
-        cursor:'pointer', transition:'background 0.2s',
-        opacity: hovered ? 0.85 : 1, flexShrink:0,
-      }}
+    <Pressable
+      onPress={() => onChange(!checked)}
+      style={({ pressed }) => [{ opacity: pressed ? 0.85 : 1 }, style]}
+      accessibilityRole="switch"
+      accessibilityState={{ checked }}
     >
-      <Switch.Thumb
-        style={{
-          display:'block',
-          position:'absolute', top:s.pad, left: checked ? s.w - s.knob - s.pad : s.pad,
-          width:s.knob, height:s.knob, borderRadius:9999,
-          background: checked ? theme.accent : theme.textMuted,
-          transition:'left 0.2s ease, background 0.2s',
-        }}
-      />
-    </Switch.Root>
+      <Animated.View
+        style={[
+          styles.track,
+          {
+            width: s.w,
+            height: s.h,
+            backgroundColor: trackColor,
+          },
+        ]}
+      >
+        <Animated.View
+          style={[
+            styles.knob,
+            {
+              width: s.knob,
+              height: s.knob,
+              backgroundColor: knobColor,
+              left: knobLeft,
+              top: s.pad,
+            },
+          ]}
+        />
+      </Animated.View>
+    </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  track: {
+    borderRadius: 9999,
+    position: 'relative',
+  },
+  knob: {
+    position: 'absolute',
+    borderRadius: 9999,
+  },
+});

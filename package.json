@@ -1,25 +1,30 @@
 {
   "name": "lenz-components",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web"
   },
   "dependencies": {
-    "@radix-ui/react-select": "^2.2.6",
-    "@radix-ui/react-slider": "^1.3.6",
-    "@radix-ui/react-switch": "^1.2.6",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-is": "^19.2.4",
-    "recharts": "^3.7.0",
-    "vaul": "^1.1.2"
+    "@expo-google-fonts/inter": "^0.4.2",
+    "@react-native-community/slider": "5.1.2",
+    "expo": "~55.0.0",
+    "expo-asset": "~55.0.8",
+    "expo-blur": "~55.0.8",
+    "expo-font": "~55.0.4",
+    "expo-haptics": "~55.0.8",
+    "expo-linear-gradient": "~55.0.8",
+    "expo-status-bar": "~55.0.4",
+    "react": "19.2.0",
+    "react-native": "0.83.2",
+    "react-native-gesture-handler": "~2.30.0",
+    "react-native-gifted-charts": "^1.4.75",
+    "react-native-reanimated": "4.2.1",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-svg": "15.15.3"
   },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^6.0.0"
-  }
+  "private": true
 }

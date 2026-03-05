@@ -1,15 +1,32 @@
-# Dependencies
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
 node_modules/
 
-# Build output
+# Expo
+.expo/
 dist/
+web-build/
+expo-env.d.ts
 
-# Environment
-.env
-.env.*
-*.local
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
 
-# OS
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
 .DS_Store
 Thumbs.db
 
@@ -19,7 +36,14 @@ Thumbs.db
 *.swp
 *.swo
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Environment
+.env
+.env.*
+*.pem
+
+# typescript
+*.tsbuildinfo
+
+# generated native folders
+/ios
+/android

@@ -1,56 +1,59 @@
-import { radius, FONT_FAMILY } from '../../config/theme';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { radius } from '../../config/theme';
 
 export default function EmptyState({ theme, icon, title, description, style = {} }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '40px 20px',
-        textAlign: 'center',
-        fontFamily: FONT_FAMILY,
-        ...style,
-      }}
-    >
+    <View style={[styles.container, style]}>
       {icon && (
-        <div
-          style={{
-            width: 48,
-            height: 48,
-            borderRadius: radius.md,
-            background: theme.accentFaint,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: 16,
-          }}
+        <View
+          style={[
+            styles.iconContainer,
+            {
+              borderRadius: radius.md,
+              backgroundColor: theme.accentFaint,
+            },
+          ]}
         >
           {icon}
-        </div>
+        </View>
       )}
-      <div
-        style={{
-          fontSize: 15,
-          fontWeight: 500,
-          color: theme.textPrimary,
-          marginBottom: 6,
-        }}
-      >
+      <Text style={[styles.title, { color: theme.textPrimary }]}>
         {title}
-      </div>
-      <div
-        style={{
-          fontSize: 13,
-          fontWeight: 300,
-          color: theme.textMuted,
-          lineHeight: 1.5,
-          maxWidth: 240,
-        }}
-      >
+      </Text>
+      <Text style={[styles.description, { color: theme.textMuted }]}>
         {description}
-      </div>
-    </div>
+      </Text>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+  iconContainer: {
+    width: 48,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  title: {
+    fontSize: 15,
+    fontFamily: 'Inter_500Medium',
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+  description: {
+    fontSize: 13,
+    fontFamily: 'Inter_300Light',
+    lineHeight: 20,
+    maxWidth: 240,
+    textAlign: 'center',
+  },
+});

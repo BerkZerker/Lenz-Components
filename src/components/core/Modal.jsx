@@ -1,119 +1,123 @@
-import { Drawer } from 'vaul';
-import { withAlpha, radius, FONT_FAMILY, MAX_WIDTH } from '../../config/theme';
+import React from 'react';
+import { View, Text, Pressable, Modal as RNModal, ScrollView } from 'react-native';
+import Svg, { Line } from 'react-native-svg';
+import { withAlpha, radius } from '../../config/theme';
 
 export default function Modal({ theme, open, onOpenChange, title, children, actions = [] }) {
   return (
-    <Drawer.Root open={open} onOpenChange={onOpenChange} shouldScaleBackground={false}>
-      <Drawer.Portal>
-        <Drawer.Overlay style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 100,
-          background: theme.scrim,
-          backdropFilter: 'blur(4px)',
-        }} />
-        <Drawer.Content style={{
-          position: 'fixed',
-          bottom: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 101,
-          width: '100%',
-          maxWidth: MAX_WIDTH,
-          maxHeight: '85vh',
-          background: theme.surface1,
-          borderRadius: '20px 20px 0 0',
-          overflowY: 'auto',
-          outline: 'none',
-        }}>
-          <Drawer.Handle style={{ background: theme.border }} />
-          <div style={{ padding: '8px 20px 32px' }}>
+    <RNModal
+      visible={open}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={() => onOpenChange(false)}
+    >
+      {/* Semi-transparent overlay */}
+      <Pressable
+        style={{
+          flex: 1,
+          backgroundColor: theme.scrim,
+          justifyContent: 'flex-end',
+        }}
+        onPress={() => onOpenChange(false)}
+      >
+        {/* Bottom panel - prevent press propagation */}
+        <Pressable
+          onPress={() => {}}
+          style={{
+            backgroundColor: theme.surface1,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            maxHeight: '85%',
+          }}
+        >
+          {/* Handle bar */}
+          <View style={{
+            alignSelf: 'center',
+            width: 36,
+            height: 4,
+            borderRadius: 9999,
+            backgroundColor: theme.border,
+            marginTop: 8,
+          }} />
+
+          <View style={{ paddingHorizontal: 20, paddingTop: 8, paddingBottom: 32 }}>
             {/* Header */}
-            <div style={{
-              display: 'flex',
+            <View style={{
+              flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
               marginBottom: 16,
             }}>
-              <div style={{
+              <Text style={{
                 fontSize: 18,
-                fontWeight: 500,
+                fontFamily: 'Inter_500Medium',
                 color: theme.textPrimary,
-                fontFamily: FONT_FAMILY,
               }}>
                 {title}
-              </div>
-              <button
-                onClick={() => onOpenChange(false)}
-                aria-label="Close"
+              </Text>
+              <Pressable
+                onPress={() => onOpenChange(false)}
+                accessibilityLabel="Close"
                 style={{
                   width: 32,
                   height: 32,
                   borderRadius: radius.pill,
-                  border: 'none',
-                  cursor: 'pointer',
-                  background: theme.surface2,
-                  display: 'flex',
+                  backgroundColor: theme.surface2,
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <svg
-                  width={16}
-                  height={16}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={theme.textMuted}
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  aria-hidden="true"
-                >
-                  <line x1={18} y1={6} x2={6} y2={18} />
-                  <line x1={6} y1={6} x2={18} y2={18} />
-                </svg>
-              </button>
-            </div>
+                <Svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={theme.textMuted} strokeWidth={2} strokeLinecap="round">
+                  <Line x1={18} y1={6} x2={6} y2={18} />
+                  <Line x1={6} y1={6} x2={18} y2={18} />
+                </Svg>
+              </Pressable>
+            </View>
 
             {/* Content */}
-            <div style={{ marginBottom: actions.length > 0 ? 20 : 0 }}>
+            <ScrollView style={{ marginBottom: actions.length > 0 ? 20 : 0 }}>
               {children}
-            </div>
+            </ScrollView>
 
             {/* Action buttons */}
             {actions.length > 0 && (
-              <div style={{ display: 'flex', gap: 10 }}>
+              <View style={{ flexDirection: 'row', gap: 10 }}>
                 {actions.map((action, i) => {
                   const variantStyles = {
-                    primary: { background: theme.accent, color: 'white' },
-                    secondary: { background: theme.surface2, color: theme.textPrimary },
-                    danger: { background: withAlpha(theme.danger, 0.09), color: theme.danger },
+                    primary: { backgroundColor: theme.accent, color: 'white' },
+                    secondary: { backgroundColor: theme.surface2, color: theme.textPrimary },
+                    danger: { backgroundColor: withAlpha(theme.danger, 0.09), color: theme.danger },
                   };
                   const vs = variantStyles[action.variant || 'primary'];
                   return (
-                    <button
+                    <Pressable
                       key={i}
-                      onClick={action.onClick}
+                      onPress={action.onClick}
                       style={{
                         flex: action.flex || (action.variant === 'danger' ? undefined : 1),
-                        padding: '12px 16px',
+                        paddingVertical: 12,
+                        paddingHorizontal: 16,
                         borderRadius: radius.md,
-                        border: 'none',
-                        cursor: 'pointer',
-                        fontSize: 13,
-                        fontWeight: 500,
-                        fontFamily: FONT_FAMILY,
-                        ...vs,
+                        backgroundColor: vs.backgroundColor,
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }}
                     >
-                      {action.label}
-                    </button>
+                      <Text style={{
+                        fontSize: 13,
+                        fontFamily: 'Inter_500Medium',
+                        color: vs.color,
+                      }}>
+                        {action.label}
+                      </Text>
+                    </Pressable>
                   );
                 })}
-              </div>
+              </View>
             )}
-          </div>
-        </Drawer.Content>
-      </Drawer.Portal>
-    </Drawer.Root>
+          </View>
+        </Pressable>
+      </Pressable>
+    </RNModal>
   );
 }

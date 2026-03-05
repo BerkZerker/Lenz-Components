@@ -1,18 +1,51 @@
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { HABIT_COLORS } from '../../config/theme';
 import GlassCard from '../foundation/GlassCard';
 
 export default function PaletteSwatches({ theme, style = {} }) {
   return (
-    <GlassCard theme={theme} style={{ padding:20, ...style }}>
-      <div style={{ fontSize:14, fontWeight:500, color:theme.textPrimary, marginBottom:12 }}>Habit Color Palette</div>
-      <div style={{ display:'flex', flexWrap:'wrap', gap:12 }}>
-        {HABIT_COLORS.map(c => (
-          <div key={c.id} style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:5 }}>
-            <div style={{ width:36, height:36, borderRadius:9999, background:c.primary }} />
-            <span style={{ fontSize:9, fontWeight:400, color:theme.textMuted }}>{c.label}</span>
-          </div>
+    <GlassCard theme={theme} style={[{ padding: 20 }, style]}>
+      <Text style={[styles.title, { color: theme.textPrimary }]}>
+        Habit Color Palette
+      </Text>
+      <View style={styles.swatchGrid}>
+        {HABIT_COLORS.map((c) => (
+          <View key={c.id} style={styles.swatchItem}>
+            <View style={[styles.swatch, { backgroundColor: c.primary }]} />
+            <Text style={[styles.label, { color: theme.textMuted }]}>
+              {c.label}
+            </Text>
+          </View>
         ))}
-      </div>
+      </View>
     </GlassCard>
   );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 14,
+    fontFamily: 'Inter_500Medium',
+    marginBottom: 12,
+  },
+  swatchGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  swatchItem: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 5,
+  },
+  swatch: {
+    width: 36,
+    height: 36,
+    borderRadius: 9999,
+  },
+  label: {
+    fontSize: 9,
+    fontFamily: 'Inter_400Regular',
+  },
+});
