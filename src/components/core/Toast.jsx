@@ -86,7 +86,8 @@ export default function Toast({ theme, message, type = 'success', visible, onDis
           alignItems: 'center',
           gap: 8,
           paddingVertical: 10,
-          paddingHorizontal: 16,
+          paddingLeft: 16,
+          paddingRight: 8,
           borderRadius: radius.md,
           backgroundColor: typeColor,
           shadowColor: '#000',
@@ -110,9 +111,10 @@ export default function Toast({ theme, message, type = 'success', visible, onDis
         <Pressable
           onPress={onDismiss}
           accessibilityLabel="Dismiss"
-          style={{ marginLeft: 4, padding: 2 }}
+          hitSlop={8}
+          style={{ padding: 6 }}
         >
-          <Svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2} strokeLinecap="round">
+          <Svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5} strokeLinecap="round">
             <Line x1={18} y1={6} x2={6} y2={18} />
             <Line x1={6} y1={6} x2={18} y2={18} />
           </Svg>

@@ -109,8 +109,8 @@ export default function Dropdown({
                     </Text>
                     {isSelected && (
                       <Svg
-                        width={12}
-                        height={12}
+                        width={16}
+                        height={16}
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke={theme.accent}
@@ -156,9 +156,9 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '100%',
-    maxHeight: 300,
+    maxHeight: 400,
     borderWidth: 1,
-    padding: 4,
+    padding: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.2,
@@ -169,11 +169,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
   },
   optionText: {
-    fontSize: 13,
+    fontSize: 17,
     fontWeight: '400',
     fontFamily: 'Inter_400Regular',
   },

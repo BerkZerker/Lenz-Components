@@ -77,7 +77,7 @@ export default function SensitivitySlider({ theme, style = {} }) {
           onValueChange={(v) => setValue(Math.round(v))}
           minimumTrackTintColor={theme.accent}
           maximumTrackTintColor={withAlpha(theme.accent, 0.19)}
-          thumbTintColor={theme.surface1}
+          thumbTintColor={theme.accent}
           style={{ height: 32 }}
         />
       </View>

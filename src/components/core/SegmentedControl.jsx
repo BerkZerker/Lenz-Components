@@ -1,36 +1,33 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { View, Text, Pressable, Animated, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 import { radius } from '../../config/theme';
+
+const ANIM_CONFIG = { duration: 45, easing: Easing.out(Easing.quad) };
 
 export default function SegmentedControl({ theme, options, value, onChange, style = {} }) {
   const [segmentWidths, setSegmentWidths] = useState([]);
-  const animLeft = useRef(new Animated.Value(0)).current;
-  const animWidth = useRef(new Animated.Value(0)).current;
+  const animLeft = useSharedValue(0);
+  const animWidth = useSharedValue(0);
 
   const activeIndex = options.findIndex((o) => o.value === value);
 
   useEffect(() => {
-    if (segmentWidths.length !== options.length || activeIndex < 0) return;
-
-    let left = 0;
-    for (let i = 0; i < activeIndex; i++) {
-      left += segmentWidths[i];
+    if (segmentWidths.length === options.length && activeIndex >= 0) {
+      let left = 0;
+      for (let i = 0; i < activeIndex; i++) {
+        left += segmentWidths[i];
+      }
+      const width = segmentWidths[activeIndex] || 0;
+      animLeft.value = withTiming(left, ANIM_CONFIG);
+      animWidth.value = withTiming(width, ANIM_CONFIG);
     }
-    const width = segmentWidths[activeIndex] || 0;
-
-    Animated.parallel([
-      Animated.timing(animLeft, {
-        toValue: left,
-        duration: 250,
-        useNativeDriver: false,
-      }),
-      Animated.timing(animWidth, {
-        toValue: width,
-        duration: 250,
-        useNativeDriver: false,
-      }),
-    ]).start();
   }, [activeIndex, segmentWidths]);
+
+  const indicatorStyle = useAnimatedStyle(() => ({
+    left: animLeft.value,
+    width: animWidth.value,
+  }));
 
   const handleLayout = (index, event) => {
     const { width } = event.nativeEvent.layout;
@@ -50,9 +47,8 @@ export default function SegmentedControl({ theme, options, value, onChange, styl
           {
             backgroundColor: theme.accent,
             borderRadius: radius.pill,
-            left: animLeft,
-            width: animWidth,
           },
+          indicatorStyle,
         ]}
       />
 

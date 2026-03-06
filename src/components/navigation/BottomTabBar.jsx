@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, Pressable, Platform } from 'react-native';
+import { View, Text, Pressable, Platform, StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { BlurTargetContext } from '../foundation/GlassCard';
 import Svg, { Rect as SvgRect, Line, Path } from 'react-native-svg';
@@ -156,12 +156,15 @@ export default function BottomTabBar({
         <BlurView
           intensity={48}
           tint={tint}
+          style={StyleSheet.absoluteFill}
           {...blurProps}
+        />
+        <View
           style={{
-            backgroundColor: theme.glassBackground,
             flexDirection: 'row',
             alignItems: 'center',
             paddingVertical: 4,
+            backgroundColor: theme.glassBackground,
           }}
         >
           {/* Left tabs */}
@@ -199,7 +202,7 @@ export default function BottomTabBar({
           <View style={{ flex: 1, flexDirection: 'row' }}>
             {rightTabs.map(renderTab)}
           </View>
-        </BlurView>
+        </View>
       </View>
     </View>
   );

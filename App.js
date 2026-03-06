@@ -174,40 +174,54 @@ function Toast({ theme, message, type = 'success', visible, onDismiss }) {
   };
 
   return (
-    <Animated.View
+    <View
+      pointerEvents="box-none"
       style={{
         position: 'absolute',
         bottom: 80,
-        alignSelf: 'center',
-        zIndex: 200,
-        flexDirection: 'row',
+        left: 0,
+        right: 0,
         alignItems: 'center',
-        gap: 8,
-        paddingVertical: 10,
-        paddingHorizontal: 16,
-        borderRadius: radius.md,
-        backgroundColor: typeColor,
-        maxWidth: MAX_WIDTH - 40,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 20,
-        elevation: 10,
-        transform: [{ translateY }],
-        opacity,
+        zIndex: 200,
       }}
     >
-      {typeIcons[type] || typeIcons.success}
-      <Text style={{ color: 'white', fontSize: 13, fontFamily: 'Inter_500Medium', flex: 1 }}>
-        {message}
-      </Text>
-      <Pressable onPress={onDismiss} accessibilityLabel="Dismiss">
-        <Svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2} strokeLinecap="round">
-          <SvgLine x1={18} y1={6} x2={6} y2={18} />
-          <SvgLine x1={6} y1={6} x2={18} y2={18} />
-        </Svg>
-      </Pressable>
-    </Animated.View>
+      <Animated.View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 8,
+          paddingVertical: 10,
+          paddingLeft: 16,
+          paddingRight: 8,
+          borderRadius: radius.md,
+          backgroundColor: typeColor,
+          maxWidth: MAX_WIDTH - 40,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.25,
+          shadowRadius: 20,
+          elevation: 10,
+          transform: [{ translateY }],
+          opacity,
+        }}
+      >
+        {typeIcons[type] || typeIcons.success}
+        <Text style={{ color: 'white', fontSize: 13, fontFamily: 'Inter_500Medium', flex: 1 }}>
+          {message}
+        </Text>
+        <Pressable
+          onPress={onDismiss}
+          accessibilityLabel="Dismiss"
+          hitSlop={8}
+          style={{ padding: 6 }}
+        >
+          <Svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5} strokeLinecap="round">
+            <SvgLine x1={18} y1={6} x2={6} y2={18} />
+            <SvgLine x1={6} y1={6} x2={18} y2={18} />
+          </Svg>
+        </Pressable>
+      </Animated.View>
+    </View>
   );
 }
 
@@ -320,54 +334,57 @@ function BottomTabBar({ theme, activeTab, onTabChange, onAddHabit, onVoiceNote, 
         overflow: 'hidden',
       }}
     >
-    <BlurView
-      intensity={48}
-      tint={tint}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: theme.glassBackground,
-        paddingVertical: 4,
-      }}
-      {...blurProps}
-    >
-      {/* Left tabs */}
-      <View style={{ flex: 1, flexDirection: 'row' }}>{leftTabs.map(renderTab)}</View>
+      <BlurView
+        intensity={48}
+        tint={tint}
+        style={StyleSheet.absoluteFill}
+        {...blurProps}
+      />
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingVertical: 4,
+          backgroundColor: theme.glassBackground,
+        }}
+      >
+        {/* Left tabs */}
+        <View style={{ flex: 1, flexDirection: 'row' }}>{leftTabs.map(renderTab)}</View>
 
-      {/* Center FAB */}
-      <View style={{ width: 64, alignItems: 'center', justifyContent: 'center' }}>
-        <Pressable
-          onPress={isMic ? onVoiceNote : onAddHabit}
-          accessibilityLabel={isMic ? 'Record voice note' : 'Add new habit'}
-          style={({ pressed }) => ({
-            width: 54,
-            height: 54,
-            borderRadius: 9999,
-            backgroundColor: theme.accent,
-            alignItems: 'center',
-            justifyContent: 'center',
-            transform: [{ scale: pressed ? 0.9 : 1 }],
-          })}
-        >
-          {isMic ? (
-            <Svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-              <SvgRect x={9} y={2} width={6} height={12} rx={3} fill="none" />
-              <SvgPath d="M5 10a7 7 0 0 0 14 0" fill="none" />
-              <SvgLine x1={12} y1={17} x2={12} y2={21} />
-              <SvgLine x1={8} y1={21} x2={16} y2={21} />
-            </Svg>
-          ) : (
-            <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5} strokeLinecap="round">
-              <SvgLine x1={12} y1={5} x2={12} y2={19} />
-              <SvgLine x1={5} y1={12} x2={19} y2={12} />
-            </Svg>
-          )}
-        </Pressable>
+        {/* Center FAB */}
+        <View style={{ width: 64, alignItems: 'center', justifyContent: 'center' }}>
+          <Pressable
+            onPress={isMic ? onVoiceNote : onAddHabit}
+            accessibilityLabel={isMic ? 'Record voice note' : 'Add new habit'}
+            style={({ pressed }) => ({
+              width: 54,
+              height: 54,
+              borderRadius: 9999,
+              backgroundColor: theme.accent,
+              alignItems: 'center',
+              justifyContent: 'center',
+              transform: [{ scale: pressed ? 0.9 : 1 }],
+            })}
+          >
+            {isMic ? (
+              <Svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <SvgRect x={9} y={2} width={6} height={12} rx={3} fill="none" />
+                <SvgPath d="M5 10a7 7 0 0 0 14 0" fill="none" />
+                <SvgLine x1={12} y1={17} x2={12} y2={21} />
+                <SvgLine x1={8} y1={21} x2={16} y2={21} />
+              </Svg>
+            ) : (
+              <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5} strokeLinecap="round">
+                <SvgLine x1={12} y1={5} x2={12} y2={19} />
+                <SvgLine x1={5} y1={12} x2={19} y2={12} />
+              </Svg>
+            )}
+          </Pressable>
+        </View>
+
+        {/* Right tabs */}
+        <View style={{ flex: 1, flexDirection: 'row' }}>{rightTabs.map(renderTab)}</View>
       </View>
-
-      {/* Right tabs */}
-      <View style={{ flex: 1, flexDirection: 'row' }}>{rightTabs.map(renderTab)}</View>
-    </BlurView>
     </View>
   );
 
